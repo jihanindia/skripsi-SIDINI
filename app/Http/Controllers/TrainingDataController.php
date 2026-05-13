@@ -11,7 +11,13 @@ class TrainingDataController extends Controller
     public function index()
     {
         $trainingData = \App\Models\TrainingData::all();
-        return view('training-data.index', compact('trainingData'));
+        
+        $metadata = [];
+        if (file_exists(storage_path('app/knn_metadata.json'))) {
+            $metadata = json_decode(file_get_contents(storage_path('app/knn_metadata.json')), true);
+        }
+
+        return view('training-data.index', compact('trainingData', 'metadata'));
     }
 
     public function train(Request $request)
@@ -44,7 +50,11 @@ class TrainingDataController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            return redirect()->back()->with('error', 'Gagal melatih model: ' . $process->getErrorOutput());
+            $errorOutput = $process->getErrorOutput();
+            if (empty($errorOutput)) {
+                $errorOutput = $process->getOutput();
+            }
+            return redirect()->back()->with('error', 'Gagal melatih model: ' . $errorOutput);
         }
 
         $output = $process->getOutput();
@@ -60,47 +70,63 @@ class TrainingDataController extends Controller
         $accuracy = 0;
         $best_k = 0;
 
-        // Parse JSON output from Python script and insert into DB
-        if (preg_match('/===== JSON DATA =====\s*({.*})/s', $output, $jsonMatches)) {
-            $parsedData = json_decode($jsonMatches[1], true);
+        // Parse JSON output from Python script using explode instead of preg_match for robustness with large data
+        $parts = explode('===== JSON DATA =====', $output);
+        if (count($parts) >= 2) {
+            $jsonString = trim($parts[1]);
+            $parsedData = json_decode($jsonString, true);
             
-            if (isset($parsedData['data']) && is_array($parsedData['data']) && count($parsedData['data']) > 0) {
+            if (json_last_error() === JSON_ERROR_NONE && isset($parsedData['data'])) {
                 $accuracy = $parsedData['test_accuracy'] ?? $parsedData['cv_accuracy'] ?? $parsedData['accuracy'] ?? 0;
                 $best_k = $parsedData['best_k'] ?? 0;
                 $jsonData = $parsedData['data'];
 
-                // Hapus data lama (opsional) atau update
-                \App\Models\TrainingData::truncate();
+                if (is_array($jsonData) && count($jsonData) > 0) {
+                    // Hapus data lama
+                    \App\Models\TrainingData::truncate();
 
-                $insertData = [];
-                foreach ($jsonData as $row) {
-                    $insertData[] = [
-                        'nama' => $row['nama'] ?? null,
-                        'usia' => $row['usia'] ?? null,
-                        'paritas' => $row['paritas'] ?? null,
-                        'tinggibadan' => $row['tb'] ?? $row['tinggibadan'] ?? null,
-                        'beratbadan' => $row['bb'] ?? $row['beratbadan'] ?? null,
-                        'imt' => $row['imt'] ?? null,
-                        'sistolik' => $row['sistol'] ?? $row['sistolik'] ?? null,
-                        'diastolik' => $row['diastol'] ?? $row['diastolik'] ?? null,
-                        'riw_ht_keluarga' => $row['riw_ht_keluarga'] ?? null,
-                        'hb' => $row['hb'] ?? null,
-                        'gds' => $row['gds'] ?? null,
-                        'protein_urine' => $row['protein_urin'] ?? $row['protein_urine'] ?? null,
-                        'diagnosis' => strtolower($row['status'] ?? 'normal'),
-                        'prediksi_knn' => strtolower($row['prediksi_knn'] ?? 'normal'),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
+                    $insertData = [];
+                    foreach ($jsonData as $row) {
+                        $insertData[] = [
+                            'nama' => $row['nama'] ?? null,
+                            'usia' => $row['usia'] ?? null,
+                            'paritas' => $row['paritas'] ?? null,
+                            'tinggibadan' => $row['tb'] ?? $row['tinggibadan'] ?? null,
+                            'beratbadan' => $row['bb'] ?? $row['beratbadan'] ?? null,
+                            'imt' => $row['imt'] ?? null,
+                            'sistolik' => $row['sistol'] ?? $row['sistolik'] ?? null,
+                            'diastolik' => $row['diastol'] ?? $row['diastolik'] ?? null,
+                            'riw_ht_keluarga' => $row['riw_ht_keluarga'] ?? null,
+                            'hb' => $row['hb'] ?? null,
+                            'gds' => $row['gds'] ?? null,
+                            'protein_urine' => $row['protein_urin'] ?? $row['protein_urine'] ?? null,
+                            'diagnosis' => strtolower($row['status'] ?? 'normal'),
+                            'prediksi_knn' => strtolower($row['prediksi_knn'] ?? 'normal'),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                    
+                    \App\Models\TrainingData::insert($insertData);
+
+                    // Simpan metadata secara permanen
+                    file_put_contents(storage_path('app/knn_metadata.json'), json_encode([
+                        'accuracy' => $accuracy,
+                        'best_k' => $best_k,
+                        'trained_at' => now()->toDateTimeString(),
+                    ]));
                 }
-                
-                \App\Models\TrainingData::insert($insertData);
+            } else {
+                \Log::error('Gagal decode JSON dari Python: ' . json_last_error_msg());
             }
+        } else {
+            \Log::warning('Marker JSON DATA tidak ditemukan dalam output Python.');
         }
 
         return redirect()->back()->with([
             'success' => 'Model KNN berhasil dilatih!',
             'accuracy' => $accuracy,
+            'best_k' => $best_k,
             'output' => $output
         ]);
     }
