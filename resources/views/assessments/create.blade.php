@@ -25,7 +25,7 @@
         Lengkapi semua data pasien dengan teliti untuk mendapatkan hasil prediksi yang akurat
     </p>
 
-    <form action="#" method="POST">
+    <form action="{{ route('assessments.store') }}" method="POST">
         @csrf
         
         <!-- Patient Selection -->
@@ -40,6 +40,9 @@
                     <label class="form-label">Pilih Pasien</label>
                     <select class="form-input" name="patient_id" required>
                         <option value="">-- Pilih Pasien --</option>
+                        @foreach($patients as $patient)
+                            <option value="{{ $patient->id }}">{{ $patient->name }} ({{ $patient->medical_record_number }})</option>
+                        @endforeach
                         <option value="new">+ Tambah Pasien Baru</option>
                     </select>
                 </div>

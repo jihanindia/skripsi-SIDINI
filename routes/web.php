@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TrainingDataController;
+use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\PatientController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -27,22 +29,17 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
     
     // Assessments
-    Route::get('/assessments/create', function () {
-        return view('assessments.create');
-    })->name('assessments.create');
+    Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
+    Route::post('/assessments/create', [AssessmentController::class, 'store'])->name('assessments.store');
     
     Route::get('/assessments', function () {
         return view('assessments.index');
     })->name('assessments.index');
     
     // Patients
-    Route::get('/patients', function () {
-        return view('patients.index');
-    })->name('patients.index');
-    
-    Route::get('/patients/create', function () {
-        return view('patients.create');
-    })->name('patients.create');
+    Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
+    Route::get('/patients/create', [PatientController::class, 'create'])->name('patients.create');
+    Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
     
     // Reports
     Route::get('/reports', function () {

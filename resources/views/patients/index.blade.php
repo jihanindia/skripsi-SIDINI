@@ -34,6 +34,33 @@
                 </tr>
             </thead>
             <tbody>
+                @forelse($patients as $patient)
+                <tr>
+                    <td>{{ $patient->medical_record_number }}</td>
+                    <td>{{ $patient->name }}</td>
+                    <td>{{ $patient->age }} Thn</td>
+                    <td>{{ $patient->blood_type ?? '-' }}</td>
+                    <td>{{ $patient->assessments_count }}</td>
+                    <td>
+                        @php
+                            $latestResult = $patient->latestAssessment?->result;
+                        @endphp
+                        @if($latestResult)
+                            <span class="badge badge-{{ $latestResult->risk_color }}">
+                                {{ $latestResult->risk_category_label }}
+                            </span>
+                        @else
+                            <span style="color: var(--color-gray-400);">Belum Ada</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="#" class="btn btn-sm btn-outline" title="Detail">👁️</a>
+                            <a href="{{ route('assessments.create', ['patient_id' => $patient->id]) }}" class="btn btn-sm btn-primary" title="Penilaian Baru">➕</a>
+                        </div>
+                    </td>
+                </tr>
+                @empty
                 <tr>
                     <td colspan="7" style="text-align: center; padding: 3rem; color: var(--color-gray-400);">
                         <svg style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,6 +70,7 @@
                         <p style="font-size: 0.875rem; margin: 0;">Tambahkan pasien baru untuk memulai penilaian risiko preeklampsia</p>
                     </td>
                 </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
