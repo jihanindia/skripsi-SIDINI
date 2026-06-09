@@ -3,53 +3,40 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TrainingDataController;
+use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 
-// Redirect root to login
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Protected Routes
 Route::middleware('auth')->group(function () {
-    // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    
-    // Assessments
-    Route::get('/assessments/create', function () {
-        return view('assessments.create');
-    })->name('assessments.create');
-    
-    Route::get('/assessments', function () {
-        return view('assessments.index');
-    })->name('assessments.index');
-    
-    // Patients
-    Route::get('/patients', function () {
-        return view('patients.index');
-    })->name('patients.index');
-    
-    Route::get('/patients/create', function () {
-        return view('patients.create');
-    })->name('patients.create');
-    
-    // Reports
-    Route::get('/reports', function () {
-        return view('reports.index');
-    })->name('reports.index');
-    
-    // Training Data
-    Route::get('/training-data', [TrainingDataController::class, 'index'])->name('training-data.index');
-    Route::post('/training-data/train', [TrainingDataController::class, 'train'])->name('training-data.train');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Data pasien — dinas lihat semua, puskesmas lihat puskesmas sendiri
+    Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
+
+    // Dinas Kesehatan Kota Bogor — laporan kasus preeklampsia
+    Route::middleware('role:dinas')->group(function () {
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+    });
+
+    // Puskesmas — penilaian & training KNN
+    Route::middleware('role:puskesmas')->group(function () {
+        Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
+        Route::post('/assessments/create', [AssessmentController::class, 'store'])->name('assessments.store');
+
+        Route::get('/training-data', [TrainingDataController::class, 'index'])->name('training-data.index');
+        Route::post('/training-data/train', [TrainingDataController::class, 'train'])->name('training-data.train');
+    });
 });

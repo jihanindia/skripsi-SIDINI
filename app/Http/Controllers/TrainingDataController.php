@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class TrainingDataController extends Controller
 {
     public function index()
     {
         $trainingData = \App\Models\TrainingData::all();
-        return view('training-data.index', compact('trainingData'));
+
+        $metadata = [];
+        if (file_exists(storage_path('app/knn_metadata.json'))) {
+            $metadata = json_decode(file_get_contents(storage_path('app/knn_metadata.json')), true);
+        }
+
+        return view('training-data.index', compact('trainingData', 'metadata'));
     }
 
     public function train(Request $request)
@@ -44,32 +51,44 @@ class TrainingDataController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            return redirect()->back()->with('error', 'Gagal melatih model: ' . $process->getErrorOutput());
+            $errorOutput = $process->getErrorOutput();
+            if (empty($errorOutput)) {
+                $errorOutput = $process->getOutput();
+            }
+            return redirect()->back()->with('error', 'Gagal melatih model: ' . $errorOutput);
         }
 
         $output = $process->getOutput();
-        
-        // Menampilkan output dari Python ke terminal tempat 'php artisan serve' berjalan
+
         $terminalOutput = preg_replace('/===== JSON DATA =====.*/s', '', $output);
-        
         $console = new \Symfony\Component\Console\Output\ConsoleOutput();
         $console->writeln("\n<info>[HASIL PELATIHAN MODEL KNN]</info>");
         $console->writeln(trim($terminalOutput));
         $console->writeln("");
-        
-        $accuracy = 0;
-        $best_k = 0;
 
-        // Parse JSON output from Python script and insert into DB
-        if (preg_match('/===== JSON DATA =====\s*({.*})/s', $output, $jsonMatches)) {
-            $parsedData = json_decode($jsonMatches[1], true);
-            
-            if (isset($parsedData['data']) && is_array($parsedData['data']) && count($parsedData['data']) > 0) {
-                $accuracy = $parsedData['test_accuracy'] ?? $parsedData['cv_accuracy'] ?? $parsedData['accuracy'] ?? 0;
-                $best_k = $parsedData['best_k'] ?? 0;
-                $jsonData = $parsedData['data'];
+        $parsedData = $this->parsePythonOutput($output);
 
-                // Hapus data lama (opsional) atau update
+        if ($parsedData === null) {
+            Log::warning('Gagal mem-parse output Python.', [
+                'json_error' => json_last_error_msg(),
+                'output_tail' => substr($output, -500),
+            ]);
+            return redirect()->back()->with(
+                'error',
+                'Model KNN selesai dijalankan, tetapi Laravel tidak dapat membaca hasil JSON. Periksa storage/logs/laravel.log.'
+            );
+        }
+
+        $accuracy = $parsedData['test_accuracy'] ?? $parsedData['cv_accuracy'] ?? $parsedData['accuracy'] ?? 0;
+        $best_k = $parsedData['best_k'] ?? 0;
+        $jsonData = $parsedData['data'] ?? [];
+
+        if (!is_array($jsonData) || count($jsonData) === 0) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dikembalikan dari skrip Python.');
+        }
+
+        try {
+            DB::transaction(function () use ($jsonData, $accuracy, $best_k) {
                 \App\Models\TrainingData::truncate();
 
                 $insertData = [];
@@ -93,15 +112,59 @@ class TrainingDataController extends Controller
                         'updated_at' => now(),
                     ];
                 }
-                
-                \App\Models\TrainingData::insert($insertData);
-            }
+
+                foreach (array_chunk($insertData, 100) as $chunk) {
+                    \App\Models\TrainingData::insert($chunk);
+                }
+
+                file_put_contents(storage_path('app/knn_metadata.json'), json_encode([
+                    'accuracy' => $accuracy,
+                    'best_k' => $best_k,
+                    'trained_at' => now()->toDateTimeString(),
+                    'total_records' => count($insertData),
+                ]));
+            });
+        } catch (\Throwable $e) {
+            Log::error('Gagal menyimpan data training ke database: ' . $e->getMessage());
+
+            return redirect()->back()->with(
+                'error',
+                'Data KNN berhasil diolah, tetapi gagal disimpan ke database: ' . $e->getMessage()
+                . ' — pastikan migrasi kolom string sudah dijalankan (php artisan migrate).'
+            );
         }
 
         return redirect()->back()->with([
-            'success' => 'Model KNN berhasil dilatih!',
+            'success' => 'Model KNN berhasil dilatih dan ' . count($jsonData) . ' data tersimpan ke database.',
             'accuracy' => $accuracy,
-            'output' => $output
+            'best_k' => $best_k,
         ]);
+    }
+
+    /**
+     * Ambil JSON dari output Python (marker atau fallback blok JSON).
+     */
+    private function parsePythonOutput(string $output): ?array
+    {
+        if (str_contains($output, '===== JSON DATA =====')) {
+            $jsonString = trim(explode('===== JSON DATA =====', $output, 2)[1]);
+        } else {
+            $start = strrpos($output, '{"best_k"');
+            if ($start === false) {
+                $start = strrpos($output, '{"data"');
+            }
+            if ($start === false) {
+                return null;
+            }
+            $jsonString = substr($output, $start);
+        }
+
+        $parsedData = json_decode($jsonString, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !isset($parsedData['data'])) {
+            return null;
+        }
+
+        return $parsedData;
     }
 }

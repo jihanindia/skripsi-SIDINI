@@ -18,14 +18,18 @@
 
 <!-- Statistics Cards -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-    <!-- Total Assessments -->
     <div class="stat-card fade-in" style="animation-delay: 0.1s;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <div>
                 <p class="stat-label">Total Penilaian</p>
-                <p class="stat-value gradient-text">0</p>
+                <p class="stat-value gradient-text">{{ $totalAssessments }}</p>
                 <p style="font-size: 0.875rem; color: var(--color-gray-500); margin-top: 0.5rem;">
-                    <span style="color: var(--color-medical-success); font-weight: 600;">↑ 0%</span> dari bulan lalu
+                    @if($growthPercent >= 0)
+                    <span style="color: var(--color-medical-success); font-weight: 600;">↑ {{ $growthPercent }}%</span>
+                    @else
+                    <span style="color: var(--color-medical-danger); font-weight: 600;">↓ {{ abs($growthPercent) }}%</span>
+                    @endif
+                    dari bulan lalu
                 </p>
             </div>
             <div class="medical-icon icon-primary">
@@ -36,14 +40,13 @@
         </div>
     </div>
 
-    <!-- High Risk Cases -->
     <div class="stat-card fade-in" style="animation-delay: 0.2s;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <div>
-                <p class="stat-label">Kasus Risiko Tinggi</p>
-                <p class="stat-value" style="color: var(--color-medical-danger);">0</p>
+                <p class="stat-label">Kasus Preeklampsia</p>
+                <p class="stat-value" style="color: var(--color-medical-danger);">{{ $highRiskCount }}</p>
                 <p style="font-size: 0.875rem; color: var(--color-gray-500); margin-top: 0.5rem;">
-                    Memerlukan perhatian segera
+                    Terdeteksi oleh KNN
                 </p>
             </div>
             <div class="medical-icon icon-danger">
@@ -54,12 +57,11 @@
         </div>
     </div>
 
-    <!-- Total Patients -->
     <div class="stat-card fade-in" style="animation-delay: 0.3s;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <div>
                 <p class="stat-label">Total Pasien</p>
-                <p class="stat-value gradient-text">0</p>
+                <p class="stat-value gradient-text">{{ $totalPatients }}</p>
                 <p style="font-size: 0.875rem; color: var(--color-gray-500); margin-top: 0.5rem;">
                     Pasien terdaftar
                 </p>
@@ -72,12 +74,11 @@
         </div>
     </div>
 
-    <!-- KNN Accuracy -->
     <div class="stat-card fade-in" style="animation-delay: 0.4s;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <div>
                 <p class="stat-label">Akurasi Model KNN</p>
-                <p class="stat-value" style="color: var(--color-medical-info);">--%</p>
+                <p class="stat-value" style="color: var(--color-medical-info);">{{ $knnAccuracy !== null ? $knnAccuracy . '%' : '--%' }}</p>
                 <p style="font-size: 0.875rem; color: var(--color-gray-500); margin-top: 0.5rem;">
                     Berdasarkan data training
                 </p>
@@ -91,105 +92,39 @@
     </div>
 </div>
 
-<!-- Quick Actions -->
-<div class="medical-card fade-in" style="margin-bottom: 2rem; animation-delay: 0.5s;">
-    <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--color-gray-800); margin: 0 0 1.5rem 0;">
-        Aksi Cepat
-    </h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-        <a href="#" class="btn btn-primary" style="justify-content: center;">
-            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Penilaian Baru
-        </a>
-        <a href="#" class="btn btn-outline" style="justify-content: center;">
-            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-            </svg>
-            Tambah Pasien
-        </a>
-        <a href="#" class="btn btn-outline" style="justify-content: center;">
-            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            Lihat Laporan
-        </a>
-    </div>
+<!-- Gambar Dashboard KNN -->
+<div class="medical-card fade-in" style="animation-delay: 0.45s; margin-bottom: 1.5rem; padding: 1rem;">
+    <img 
+        src="{{ asset('assets/dashboard_knn.png') }}" 
+        alt="Dashboard KNN"
+        style="
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+            object-fit: cover;
+        "
+    >
 </div>
 
-<!-- Risk Distribution Chart -->
-<div class="medical-card fade-in" style="margin-bottom: 2rem; animation-delay: 0.6s;">
-    <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--color-gray-800); margin: 0 0 1.5rem 0;">
-        Distribusi Risiko Preeklampsia
-    </h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
-        <div style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 12px;">
-            <div class="risk-badge risk-none" style="margin: 0 auto 0.75rem; width: fit-content;">
-                <svg style="width: 16px; height: 16px;" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                </svg>
-                Tidak Ada Risiko
-            </div>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--color-risk-none); margin: 0;">0</p>
-        </div>
-
-        <div style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 12px;">
-            <div class="risk-badge risk-low" style="margin: 0 auto 0.75rem; width: fit-content;">
-                Risiko Rendah
-            </div>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--color-risk-low); margin: 0;">0</p>
-        </div>
-
-        <div style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 12px;">
-            <div class="risk-badge risk-moderate" style="margin: 0 auto 0.75rem; width: fit-content;">
-                Risiko Sedang
-            </div>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--color-risk-moderate); margin: 0;">0</p>
-        </div>
-
-        <div style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 12px;">
-            <div class="risk-badge risk-high" style="margin: 0 auto 0.75rem; width: fit-content;">
-                Risiko Tinggi
-            </div>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--color-risk-high); margin: 0;">0</p>
-        </div>
-
-        <div style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 12px;">
-            <div class="risk-badge risk-severe" style="margin: 0 auto 0.75rem; width: fit-content;">
-                <svg style="width: 16px; height: 16px;" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                </svg>
-                Preeklampsia Berat
-            </div>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--color-risk-severe); margin: 0;">0</p>
+<!-- Grafik perkembangan penilaian -->
+<div class="medical-card fade-in chart-card" style="animation-delay: 0.5s;">
+    <div class="chart-header">
+        <h2 class="chart-title">{{ $chartTitle }}</h2>
+        <div class="chart-filter">
+            <span class="chart-filter-label">Rentang waktu:</span>
+            <a href="{{ route('dashboard', ['range' => 1]) }}"
+               class="chart-filter-btn {{ $chartRange === 1 ? 'active' : '' }}">
+                1 Tahun
+            </a>
+            <a href="{{ route('dashboard', ['range' => 5]) }}"
+               class="chart-filter-btn {{ $chartRange === 5 ? 'active' : '' }}">
+                5 Tahun
+            </a>
         </div>
     </div>
-</div>
-
-<!-- Recent Assessments -->
-<div class="medical-card fade-in" style="animation-delay: 0.7s;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--color-gray-800); margin: 0;">
-            Penilaian Terbaru
-        </h2>
-        <a href="#" style="color: var(--color-medical-primary); font-weight: 600; text-decoration: none; font-size: 0.875rem;">
-            Lihat Semua →
-        </a>
-    </div>
-
-    <div style="text-align: center; padding: 3rem 1rem; color: var(--color-gray-400);">
-        <svg style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-        <p style="font-size: 1.125rem; font-weight: 600; margin: 0 0 0.5rem 0;">Belum Ada Penilaian</p>
-        <p style="font-size: 0.875rem; margin: 0;">Mulai dengan membuat penilaian risiko preeklampsia pertama Anda</p>
-        <a href="#" class="btn btn-primary" style="margin-top: 1.5rem;">
-            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Buat Penilaian Baru
-        </a>
+    <div class="chart-wrapper">
+        <canvas id="assessmentTrendChart"></canvas>
     </div>
 </div>
 
@@ -209,5 +144,182 @@
         animation: fadeIn 0.6s ease-out forwards;
         opacity: 0;
     }
+
+    .chart-card {
+        padding: 1.5rem 1.75rem 2rem;
+    }
+
+    .chart-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .chart-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--color-gray-800);
+        margin: 0;
+        flex: 1;
+        min-width: 200px;
+        text-align: left;
+    }
+
+    .chart-filter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .chart-filter-label {
+        font-size: 0.875rem;
+        color: var(--color-gray-500);
+        font-weight: 500;
+    }
+
+    .chart-filter-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--color-gray-600);
+        background: var(--color-gray-100);
+        border: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .chart-filter-btn:hover {
+        background: var(--color-gray-200);
+        color: var(--color-gray-800);
+    }
+
+    .chart-filter-btn.active {
+        background: var(--color-medical-primary);
+        color: white;
+        border-color: var(--color-medical-primary);
+    }
+
+    .chart-wrapper {
+        position: relative;
+        height: 380px;
+        width: 100%;
+        border: 1px solid var(--color-gray-200);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        background: #fff;
+    }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const labels = @json($chartLabels);
+    const dataNormal = @json($chartDataNormal);
+    const dataPreeklampsia = @json($chartDataPreeklampsia);
+    const allValues = [...dataNormal, ...dataPreeklampsia];
+    const maxVal = Math.max(...allValues, 0);
+    let yMax = maxVal === 0 ? 10 : Math.ceil(maxVal / 10) * 10;
+    if (yMax < 5) yMax = 5;
+    const step = yMax <= 10 ? (yMax <= 5 ? 1 : 2) : 10;
+
+    const ctx = document.getElementById('assessmentTrendChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Normal',
+                    data: dataNormal,
+                    borderColor: '#5B9BD5',
+                    backgroundColor: 'rgba(91, 155, 213, 0.08)',
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#5B9BD5',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    fill: false,
+                    tension: 0.1,
+                },
+                {
+                    label: 'Preeklampsia',
+                    data: dataPreeklampsia,
+                    borderColor: '#DC2626',
+                    backgroundColor: 'rgba(220, 38, 38, 0.08)',
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#DC2626',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6,
+                    fill: false,
+                    tension: 0.1,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        padding: 16,
+                        font: { size: 12, weight: '600' },
+                        color: '#475569',
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    padding: 12,
+                    titleFont: { size: 13, weight: '600' },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                        label: function (ctx) {
+                            return ctx.dataset.label + ': ' + ctx.parsed.y + ' pasien';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { size: 11, weight: '500' },
+                        color: '#64748b',
+                        maxRotation: 45,
+                        minRotation: 0,
+                    },
+                    border: { color: '#e2e8f0' }
+                },
+                y: {
+                    min: 0,
+                    max: yMax,
+                    ticks: {
+                        stepSize: step,
+                        font: { size: 12 },
+                        color: '#64748b'
+                    },
+                    grid: {
+                        color: '#e2e8f0',
+                        drawBorder: false
+                    },
+                    border: { display: false }
+                }
+            }
+        }
+    });
+});
+</script>
 @endsection

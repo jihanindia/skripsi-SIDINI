@@ -41,12 +41,16 @@
     
     <div class="stat-card">
         <p class="stat-label">Akurasi Model</p>
-        <p class="stat-value" style="color: var(--color-medical-info);">{{ session('accuracy') ? session('accuracy') . '%' : '--%' }}</p>
+        <p class="stat-value" style="color: var(--color-medical-info);">
+            {{ session('accuracy') ?? $metadata['accuracy'] ?? '--' }}%
+        </p>
     </div>
     
     <div class="stat-card">
         <p class="stat-label">K Value</p>
-        <p class="stat-value" style="color: var(--color-medical-warning);">5</p>
+        <p class="stat-value" style="color: var(--color-medical-warning);">
+            {{ session('best_k') ?? $metadata['best_k'] ?? '--' }}
+        </p>
     </div>
 </div>
 

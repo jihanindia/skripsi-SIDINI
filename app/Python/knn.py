@@ -24,6 +24,7 @@ from sklearn.metrics import (
 )
 
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, classification_report
 
 # =========================
 # 1. LOAD FILE CSV DARI LARAVEL
@@ -49,6 +50,9 @@ except Exception as e:
 # 2. CLEANING
 # =========================
 df.columns = df.columns.str.strip().str.lower()
+
+# Simpan kolom asli untuk output nanti
+df_original = df.copy()
 
 for col in df.columns:
     if df[col].dtype == "object":
@@ -105,7 +109,7 @@ X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(
     X,
     y,
     df.index,
-    test_size=0.20,
+    test_size=0.10,
     random_state=42,
     stratify=y
 )
@@ -135,7 +139,7 @@ preprocessor = ColumnTransformer(
 # =========================
 # 8. TUNING K
 # =========================
-k_values = [1, 3, 5, 7, 9]
+k_values = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
 
 best_k = 0
 best_cv_acc = 0
@@ -284,4 +288,10 @@ output = {
     "data": df.to_dict(orient="records")
 }
 
-print(json.dumps(output))
+# Ringkasan untuk terminal (dibaca Laravel sebelum marker JSON)
+print(f"Best K: {best_k}")
+print(f"CV Accuracy: {round(best_cv_acc * 100, 2)}%")
+print(f"Test Accuracy: {round(test_acc * 100, 2)}%")
+print(f"Total data: {len(df)}")
+print("===== JSON DATA =====")
+print(json.dumps(output, default=str))

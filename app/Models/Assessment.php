@@ -2,25 +2,33 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ScopesAssessmentByPuskesmas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Assessment extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopesAssessmentByPuskesmas;
 
     protected $fillable = [
         'patient_id',
         'user_id',
+        'puskesmas',
         'gravida',
         'para',
         'gestational_age',
         'multiple_pregnancy',
         'systolic_bp',
         'diastolic_bp',
+        'beratbadan',
+        'tinggibadan',
+        'imt',
         'heart_rate',
         'temperature',
         'protein_urine',
+        'hb',
+        'gds',
+        'riw_ht_keluarga',
         'platelets',
         'sgot',
         'sgpt',
@@ -62,6 +70,7 @@ class Assessment extends Model
         'obesity' => 'boolean',
         'autoimmune_disease' => 'boolean',
         'family_history_preeclampsia' => 'boolean',
+        'riw_ht_keluarga' => 'boolean',
         'assessment_date' => 'datetime',
     ];
 

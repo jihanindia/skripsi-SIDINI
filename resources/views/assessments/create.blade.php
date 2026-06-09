@@ -25,7 +25,7 @@
         Lengkapi semua data pasien dengan teliti untuk mendapatkan hasil prediksi yang akurat
     </p>
 
-    <form action="#" method="POST">
+    <form id="assessmentForm" action="{{ route('assessments.store') }}" method="POST">
         @csrf
         
         <!-- Patient Selection -->
@@ -37,11 +37,8 @@
             
             <div class="form-grid">
                 <div class="form-group">
-                    <label class="form-label">Pilih Pasien</label>
-                    <select class="form-input" name="patient_id" required>
-                        <option value="">-- Pilih Pasien --</option>
-                        <option value="new">+ Tambah Pasien Baru</option>
-                    </select>
+                    <label class="form-label">Nama Pasien</label>
+                    <input type="text" class="form-input" name="patient_name" value="{{ old('patient_name') }}" placeholder="Masukkan nama pasien" required>
                 </div>
                 
                 <div class="form-group">
@@ -230,17 +227,85 @@
                 </svg>
                 Batal
             </a>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" id="btnSubmitAssessment" class="btn btn-primary">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                Analisis Risiko dengan KNN
+                Analisis
             </button>
         </div>
     </form>
 </div>
 
+<!-- Modal 1: Proses analisis -->
+<div id="modalLoading" class="assessment-modal-overlay" style="display: none;" aria-hidden="true">
+    <div class="assessment-modal">
+        <div class="modal-spinner"></div>
+        <h3 style="margin: 1rem 0 0.5rem; font-size: 1.25rem; color: var(--color-gray-800);">Sedang Menganalisis...</h3>
+        <p style="margin: 0; color: var(--color-gray-600); text-align: center;">
+            Data sedang diproses dengan algoritma K-Nearest Neighbors (KNN). Mohon tunggu.
+        </p>
+    </div>
+</div>
+
+<!-- Modal 2: Hasil deteksi -->
+<div id="modalResult" class="assessment-modal-overlay" style="display: none;" aria-hidden="true">
+    <div class="assessment-modal" id="modalResultBox">
+        <div id="modalResultIcon" style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
+        <h3 id="modalResultTitle" style="margin: 0 0 0.5rem; font-size: 1.5rem;"></h3>
+        <p id="modalResultMessage" style="margin: 0 0 1rem; color: var(--color-gray-600); text-align: center; line-height: 1.6;"></p>
+        <p id="modalResultPatient" style="margin: 0 0 1.5rem; font-weight: 600; color: var(--color-gray-700);"></p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline" id="btnModalClose">Tutup</button>
+            <a href="{{ route('patients.index') }}" class="btn btn-primary" id="btnModalToPatients">Lihat Data Pasien</a>
+        </div>
+    </div>
+</div>
+
 <style>
+.assessment-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+}
+
+.assessment-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.assessment-modal.modal-preeklampsia {
+    border-top: 6px solid #dc2626;
+}
+
+.assessment-modal.modal-normal {
+    border-top: 6px solid #059669;
+}
+
+.modal-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--color-gray-200);
+    border-top-color: var(--color-medical-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 .form-section {
     margin-bottom: 2.5rem;
     padding-bottom: 2rem;
@@ -342,6 +407,101 @@ document.addEventListener("DOMContentLoaded", function () {
     bbInput.addEventListener('input', hitungIMT);
     tbInput.addEventListener('input', hitungIMT);
 
+    const form = document.getElementById('assessmentForm');
+    const modalLoading = document.getElementById('modalLoading');
+    const modalResult = document.getElementById('modalResult');
+    const modalResultBox = document.getElementById('modalResultBox');
+    const btnSubmit = document.getElementById('btnSubmitAssessment');
+
+    function showModal(el) {
+        el.style.display = 'flex';
+        el.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideModal(el) {
+        el.style.display = 'none';
+        el.setAttribute('aria-hidden', 'true');
+    }
+
+    function showResultModal(prediction, patientName) {
+        const isPreeklampsia = prediction === 'preeklampsia';
+        modalResultBox.classList.remove('modal-normal', 'modal-preeklampsia');
+        modalResultBox.classList.add(isPreeklampsia ? 'modal-preeklampsia' : 'modal-normal');
+
+        document.getElementById('modalResultIcon').textContent = isPreeklampsia ? '⚠️' : '✅';
+        document.getElementById('modalResultTitle').textContent = isPreeklampsia
+            ? 'Terdeteksi Preeklampsia'
+            : 'Hasil Normal';
+        document.getElementById('modalResultTitle').style.color = isPreeklampsia ? '#991b1b' : '#065f46';
+        document.getElementById('modalResultMessage').textContent = isPreeklampsia
+            ? 'Berdasarkan analisis KNN, pasien berisiko mengalami preeklampsia. Segera lakukan evaluasi medis lebih lanjut.'
+            : 'Berdasarkan analisis KNN, pasien dalam kondisi normal. Tetap lakukan pemantauan kehamilan secara rutin.';
+        document.getElementById('modalResultPatient').textContent = 'Pasien: ' + patientName;
+    }
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        btnSubmit.disabled = true;
+        hideModal(modalResult);
+        showModal(modalLoading);
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            hideModal(modalLoading);
+
+            if (!response.ok) {
+                let msg = 'Gagal menyimpan penilaian.';
+                if (data.errors) {
+                    msg = Object.values(data.errors).flat().join('\n');
+                } else if (data.message) {
+                    msg = data.message;
+                }
+                alert(msg);
+                btnSubmit.disabled = false;
+                return;
+            }
+
+            if (!data.success) {
+                alert(data.message || 'Gagal menyimpan penilaian.');
+                btnSubmit.disabled = false;
+                return;
+            }
+
+            showResultModal(data.prediction, data.patient_name);
+            showModal(modalResult);
+        } catch (err) {
+            hideModal(modalLoading);
+            alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            btnSubmit.disabled = false;
+        }
+    });
+
+    document.getElementById('btnModalClose').addEventListener('click', function () {
+        hideModal(modalResult);
+        btnSubmit.disabled = false;
+    });
+
+    document.getElementById('btnModalToPatients').addEventListener('click', function () {
+        window.location.href = this.href;
+    });
 });
 </script>
 @endsection

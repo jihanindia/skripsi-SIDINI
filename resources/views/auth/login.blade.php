@@ -115,22 +115,13 @@
             </button>
         </form>
 
-        <!-- Divider -->
-        <div class="divider">
-            <span class="divider-text">Atau</span>
-        </div>
-
-        <!-- Register Link -->
-        <a href="{{ route('register') }}" class="register-link">
-            <svg class="register-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-            </svg>
-            <span>Buat Akun Baru</span>
-        </a>
+        <!-- <p style="text-align: center; font-size: 0.875rem; color: var(--color-gray-500); margin: 1.5rem 0 0;">
+            Akun diberikan oleh administrator. Hubungi Dinas Kesehatan jika belum memiliki akses.
+        </p> -->
 
         <!-- Footer -->
         <div class="login-footer">
-            <p>© 2025 Preeklampsia CDSS</p>
+            <p>© 2026 Preeklampsia CDSS</p>
             <p>Sistem Pendukung Keputusan Klinis Berbasis KNN</p>
         </div>
     </div>
@@ -144,7 +135,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #EC407A 0%, #880E4F 100%);
     overflow: hidden;
     z-index: 0;
 }
@@ -160,7 +151,7 @@
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #EC407A, #880E4F);
     top: -250px;
     left: -250px;
     animation-delay: 0s;
@@ -178,7 +169,7 @@
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background: linear-gradient(135deg, #FF80AB, #FF4081);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -240,12 +231,12 @@
     width: 90px;
     height: 90px;
     margin: 0 auto;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #EC407A, #880E4F);
     border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 10px 30px rgba(216, 27, 96, 0.4);
     animation: logoFloat 3s ease-in-out infinite;
 }
 
@@ -263,7 +254,7 @@
 .login-title {
     font-size: 2.25rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #EC407A, #880E4F);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -281,7 +272,7 @@
 .title-underline {
     width: 60px;
     height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: linear-gradient(90deg, #EC407A, #880E4F);
     margin: 1rem auto 0;
     border-radius: 2px;
 }
@@ -329,7 +320,7 @@
 .modern-input:focus {
     outline: none;
     border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.15);
     transform: translateY(-2px);
 }
 
@@ -343,7 +334,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: linear-gradient(90deg, #EC407A, #880E4F);
     border-radius: 16px;
     transform: scaleX(0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -375,7 +366,7 @@
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
-    accent-color: #667eea;
+    accent-color: #D81B60;
 }
 
 .checkbox-label {
@@ -393,7 +384,7 @@
 }
 
 .forgot-link:hover {
-    color: #764ba2;
+    color: #880E4F;
     text-decoration: underline;
 }
 
@@ -401,7 +392,7 @@
 .login-button {
     width: 100%;
     padding: 1.125rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #EC407A 0%, #D81B60 100%);
     border: none;
     border-radius: 16px;
     color: white;
@@ -411,12 +402,12 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 25px rgba(216, 27, 96, 0.3);
 }
 
 .login-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 15px 35px rgba(216, 27, 96, 0.4);
 }
 
 .login-button:active {
@@ -494,10 +485,10 @@
 }
 
 .register-link:hover {
-    border-color: #667eea;
-    color: #667eea;
+    border-color: #D81B60;
+    color: #D81B60;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 8px 20px rgba(216, 27, 96, 0.15);
 }
 
 .register-icon {

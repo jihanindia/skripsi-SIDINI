@@ -2,7 +2,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 1,PI001,29,1,149,74.5,33.6,152,106,Ada,11.5,124,Positif2,Preeklampsia
 2,PI002,38,3,150,57.4,25.5,128,79,Tidak ada,13.1,158,Negatif,Normal
 3,PI003,30,0,160,82.1,32.1,150,91,Ada,11.9,77,Negatif,Normal
-4,PI004,20,1,155,62,25.8,110,80,Tidak ada,10.1,90,Positif2,Normal
 5,PI005,32,2,147,45,20.8,105,67,Tidak ada,12.4,122,Negatif,Normal
 6,PI006,35,3,156,76.2,31.3,126,82,Ada,13.1,111,Negatif,Normal
 7,PI007,29,1,150,58,25.8,103,71,Tidak ada,11.1,125,Positif1,Normal
@@ -51,7 +50,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 50,PI050,32,1,157,71.4,29,131,76,Ada,9.1,125,Negatif,Normal
 51,PI051,23,0,151,51.7,22.7,101,64,Tidak ada,12.1,125,Negatif,Normal
 52,PI052,42,3,142,64.7,32.1,123,79,Ada,10.5,206,Negatif,Normal
-53,PI053,40,2,152,59,25.5,135,97,Tidak ada,9.3,86,Positif2,Preeklampsia
 54,PI054,27,0,155,45,18.7,110,68,Tidak ada,12.1,101,Negatif,Normal
 55,PI055,34,3,156,62,25.5,106,63,Tidak ada,10.2,85,Positif1,Normal
 56,PI056,26,0,158,72.3,29,108,67,Tidak ada,13.1,92,Negatif,Normal
@@ -109,7 +107,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 108,PI108,25,0,160,77.9,30.4,125,92,Tidak ada,12.2,144,Positif2,Preeklampsia
 109,PI109,26,0,160,72.6,28.4,134,86,Tidak ada,12.1,83,Negatif,Normal
 110,PI110,24,0,142,41.6,20.6,112,72,Tidak ada,10.1,114,Negatif,Normal
-111,PI111,27,0,156,64,26.3,141,83,Tidak ada,8.1,104,Positif2,Normal
+111,PI111,27,0,156,64,26.3,141,83,Tidak ada,8.1,104,Positif2,Preeklampsia
 112,PI112,25,0,165,92.4,33.9,107,60,Tidak ada,10.1,145,Negatif,Normal
 113,PI113,31,1,156,67.5,27.7,106,74,Tidak ada,11.7,130,Negatif,Normal
 114,PI114,37,2,163,62.2,23.4,116,78,Tidak ada,12.9,102,Negatif,Normal
@@ -161,7 +159,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 160,PI160,37,4,155,67,27.9,160,100,Ada,10.1,140,Positif2,Preeklampsia
 161,PI161,20,1,150,64.9,28.8,123,76,Ada,11.4,92,Positif2,Preeklampsia
 162,PI162,37,3,147,59,27.3,120,70,Tidak ada,12.1,99,Negatif,Normal
-163,PI163,25,3,149,72.6,32.7,149,96,Tidak ada,11.1,114,Positif1,Preeklampsia
 164,PI164,28,4,160,83.3,32.5,127,85,Ada,9.3,99,Positif1,Normal
 165,PI165,28,1,155,61.5,25.6,104,58,Tidak ada,8.1,94,Negatif,Normal
 166,PI166,38,3,157,60,24.3,118,81,Tidak ada,12.1,107,Negatif,Normal
@@ -206,7 +203,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 205,PI205,24,1,153,65,27.8,113,60,Tidak ada,12.1,102,Negatif,Normal
 206,PI206,33,2,155,48.3,20.1,136,92,Ada,12.3,128,Negatif,Normal
 207,PI207,22,2,157,56,22.7,99,64,Ada,12.1,115,Negatif,Normal
-208,PI208,36,4,152,70.6,30.6,144,92,Ada,11.3,87,Positif1,Preeklampsia
 209,PI209,29,1,154,69.5,29.3,119,79,Tidak ada,11.1,86,Negatif,Normal
 210,PI210,27,1,149,58,26.1,91,63,Tidak ada,12.1,85,Positif1,Normal
 211,PI211,40,4,159,60.7,24,130,98,Ada,13.1,93,Negatif,Normal
@@ -258,13 +254,13 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 257,PI257,34,2,152,80,34.6,180,100,Ada,13.2,331,Positif2,Preeklampsia
 258,PI258,36,3,155,62.5,26,120,82,Tidak ada,12.1,100,Negatif,Normal
 259,PI259,27,0,156,55.7,22.9,141,84,Tidak ada,10.1,90,Negatif,Normal
-260,PI260,34,2,155,63.6,26.5,156,91,Tidak ada,11.1,95,Positif2,Normal
+260,PI260,34,2,155,63.6,26.5,156,91,Tidak ada,11.1,95,Positif2,Preeklampsia
 261,PI261,38,4,155,53,22.1,110,80,Tidak ada,11.1,84,Positif2,Preeklampsia
 262,PI262,33,2,149,66,29.7,110,70,Tidak ada,11.1,96,Negatif,Normal
 263,PI263,27,0,152,52.8,22.9,139,85,Ada,11.1,81,Negatif,Normal
 264,PI264,24,1,155,67.9,28.3,132,89,Tidak ada,10.1,82,Negatif,Normal
 265,PI265,27,0,150,52,23.1,80,64,Tidak ada,12.7,104,Negatif,Normal
-266,PI266,26,0,158,71.5,28.6,102,63,Tidak ada,"10,9",99,Negatif,Normal
+266,PI266,26,0,158,71.5,28.6,102,63,Tidak ada,10.9,99,Negatif,Normal
 267,PI267,28,1,155,62,25.8,121,76,Ada,11.1,139,Negatif,Normal
 268,PI268,34,2,155,52,21.6,110,64,Ada,13.1,106,Negatif,Normal
 269,PI269,41,2,149,51.5,23.2,125,81,Tidak ada,10.8,80,Negatif,Normal
@@ -350,7 +346,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 349,PI349,37,3,156,78,32.1,100,70,Tidak ada,13.1,133,Negatif,Normal
 350,PI350,35,2,158,58.7,23.5,102,67,Tidak ada,10.1,82,Negatif,Normal
 351,PI351,21,0,147,47,21.8,105,66,Tidak ada,12.1,83,Negatif,Normal
-352,PI352,24,0,136,47.2,25.5,121,85,Ada,9.7,82,Positif1,Normal
+352,PI352,24,0,149,47.2,25.5,121,85,Ada,9.7,82,Positif1,Normal
 353,PI353,32,2,157,68,27.6,105,72,Tidak ada,11.9,78,Negatif,Normal
 354,PI354,33,3,157,50.6,20.5,102,65,Tidak ada,7.4,106,Negatif,Normal
 355,PI355,27,1,156,58.2,23.9,104,69,Ada,13.2,89,Negatif,Normal
@@ -382,7 +378,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 381,PI381,29,1,151,53.6,23.5,100,57,Tidak ada,9.4,90,Negatif,Normal
 382,PI382,23,0,156,72.5,29.8,127,84,Tidak ada,12.5,117,Negatif,Normal
 383,PI383,37,6,153,106.8,45.6,125,84,Tidak ada,11.1,111,Negatif,Normal
-384,PI384,41,5,165,101,37.1,152,86,Ada,9.8,331,Positif1,Preeklampsia
 385,PI385,24,1,156,79.6,32.7,113,82,Tidak ada,13.1,119,Negatif,Normal
 386,PI386,30,2,158,66.5,26.6,126,78,Tidak ada,13.1,90,Negatif,Normal
 387,PI387,19,0,158,61.6,24.7,126,76,Ada,13.5,95,Negatif,Normal
@@ -408,7 +403,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 407,PI407,20,0,161,56,21.6,105,65,Tidak ada,11.9,122,Negatif,Normal
 408,PI408,38,1,141,62,31.2,129,73,Tidak ada,14.1,163,Negatif,Normal
 409,PI409,21,0,153,55,23.5,101,69,Tidak ada,13.1,90,Negatif,Normal
-410,PI410,26,1,159,67.3,26.6,141,89,Tidak ada,11.2,134,Positif2,Normal
 411,PI411,21,0,157,63.2,25.6,109,76,Tidak ada,12.6,87,Negatif,Normal
 412,PI412,26,0,158,72.3,29,108,67,Ada,11.9,130,Positif1,Normal
 413,PI413,37,3,150,64.1,28.5,154,92,Ada,9.1,86,Negatif,Normal
@@ -472,7 +466,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 471,PI471,23,0,155,69.9,29.1,130,73,Tidak ada,12.1,111,Negatif,Normal
 472,PI472,25,1,164,65.7,24.4,145,82,Tidak ada,11.1,89,Positif2,Preeklampsia
 473,PI473,31,1,154,69.3,29.2,129,83,Tidak ada,10.1,87,Negatif,Normal
-474,PI474,21,1,150,60.9,27.1,150,70,Tidak ada,9.6,96,Positif1,Preeklampsia
 475,PI475,19,0,155,70,29.1,100,68,Tidak ada,12.1,71,Negatif,Normal
 476,PI476,27,1,149,69.7,31.4,108,78,Tidak ada,11.3,113,Negatif,Normal
 477,PI477,31,1,167,99.4,35.6,120,92,Tidak ada,8.1,83,Negatif,Normal
@@ -541,7 +534,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 540,PI540,24,1,159,77.5,30.7,112,83,Tidak ada,10.1,92,Negatif,Normal
 541,PI541,31,2,155,56,23.3,105,74,Ada,10.1,130,Negatif,Normal
 542,PI542,29,1,155,75,31.2,136,88,Ada,8.1,81,Negatif,Normal
-543,PI543,30,1,165,73.7,27.1,152,120,Ada,10.1,129,Positif1,Preeklampsia
 544,PI544,33,3,158,83.8,33.6,116,77,Tidak ada,11.1,90,Negatif,Normal
 545,PI545,41,1,146,59,27.7,145,81,Tidak ada,12.1,122,Negatif,Normal
 546,PI546,38,1,141,62,31.2,113,10,Tidak ada,12.1,89,Negatif,Normal
@@ -587,16 +579,12 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,riw_ht_keluarga,hb,gds,protein
 586,PI586,25,0,141,52,26.2,125,85,Tidak ada,12.8,117,Negatif,Normal
 587,PI587,27,2,148,71.5,32.6,129,99,Ada,11.8,97,Negatif,Normal
 588,PI588,36,4,152,70.6,30.6,138,93,Ada,11.3,96,Positif1,Normal
-589,PI589,28,0,163,80.4,30.3,114,73,Tidak ada,12.1,163,Positif2,Normal
-590,PI590,22,1,163,50.6,19,96,57,Ada,9.6,108,Positif2,Normal
-591,PI591,24,0,149,73.8,33.2,142,84,Ada,12.5,95,Positif1,Preeklampsia
+589,PI589,28,0,163,80.4,30.3,114,73,Tidak ada,12.1,163,Positif2,Preeklampsia
 592,PI592,21,0,153,54,23.1,104,58,Tidak ada,11.1,126,Positif2,Preeklampsia
-593,PI593,27,2,150,55.1,24.5,101,66,Tidak ada,11.1,81,Positif2,Normal
 594,PI594,33,1,166,77.9,28.3,113,94,Tidak ada,12.7,144,Positif2,Preeklampsia
 595,PI595,33,1,165,92.4,33.9,143,87,Tidak ada,11,102,Positif1,Normal
 596,PI596,25,0,155,89.4,37.2,145,92,Ada,11.2,206,Positif1,Normal
 597,PI597,29,0,156,51.9,21.3,144,92,Tidak ada,11.5,90,Positif1,Normal
 598,PI598,25,1,159,90,35.6,142,81,Ada,11.9,87,Positif1,Normal
-599,PI599,30,1,150,72.6,32.3,98,68,Tidak ada,12.1,97,Positif2,Normal
 600,PI600,34,2,153,93,39.7,162,106,Ada,12.8,101,Positif1,Preeklampsia
 601,PI601,31,0,158,69.2,27.7,93,58,Tidak ada,9.4,129,Positif2,Preeklampsia

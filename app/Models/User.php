@@ -2,49 +2,62 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    public const PUSKESMAS_PULO_ARMYN = 'Puskesmas Pulo Armyn';
+    public const PUSKESMAS_PANCASAN = 'Puskesmas Pancasan';
+
+    public const ROLE_DINAS = 'dinas';
+    public const ROLE_PUSKESMAS = 'puskesmas';
+
     protected $fillable = [
         'name',
         'username',
         'email',
         'password',
         'role',
+        'puskesmas',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isDinas(): bool
+    {
+        return $this->role === self::ROLE_DINAS;
+    }
+
+    public function isPuskesmas(): bool
+    {
+        return $this->role === self::ROLE_PUSKESMAS;
+    }
+
+    public function getRoleLabelAttribute(): string
+    {
+        if ($this->isDinas()) {
+            return 'Dinas Kesehatan Kota Bogor';
+        }
+
+        if ($this->isPuskesmas() && $this->puskesmas) {
+            return $this->puskesmas;
+        }
+
+        return ucfirst($this->role ?? 'User');
     }
 }

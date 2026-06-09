@@ -10,12 +10,12 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
     
     /* Medical Color Palette */
-    --color-medical-primary: #0066CC;
-    --color-medical-secondary: #00A3E0;
+    --color-medical-primary: #D81B60;
+    --color-medical-secondary: #EC407A;
     --color-medical-success: #00C853;
     --color-medical-warning: #FFB300;
     --color-medical-danger: #E53935;
-    --color-medical-info: #00ACC1;
+    --color-medical-info: #F06292;
     
     /* Risk Colors */
     --color-risk-none: #4CAF50;
@@ -46,7 +46,7 @@
 
 body {
     font-family: var(--font-sans);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #EC407A 0%, #880E4F 100%);
     min-height: 100vh;
     color: var(--color-gray-800);
     line-height: 1.6;
@@ -96,7 +96,7 @@ body {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+    box-shadow: 0 10px 25px rgba(216, 27, 96, 0.3);
 }
 
 .btn-success {
@@ -146,7 +146,7 @@ body {
 .form-input:focus {
     outline: none;
     border-color: var(--color-medical-primary);
-    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+    box-shadow: 0 0 0 4px rgba(216, 27, 96, 0.1);
 }
 
 .form-input::placeholder {
@@ -242,7 +242,7 @@ body {
 
 /* Loading Animation */
 .spinner {
-    border: 3px solid rgba(0, 102, 204, 0.1);
+    border: 3px solid rgba(216, 27, 96, 0.1);
     border-top: 3px solid var(--color-medical-primary);
     border-radius: 50%;
     width: 40px;
@@ -305,7 +305,7 @@ body {
 }
 
 .icon-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #EC407A, #880E4F);
     color: white;
 }
 

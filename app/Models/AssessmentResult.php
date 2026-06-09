@@ -47,13 +47,20 @@ class AssessmentResult extends Model
     public function getRiskCategoryLabelAttribute()
     {
         return match($this->risk_category) {
-            'no_risk' => 'Tidak Ada Risiko',
+            'no_risk' => 'Normal',
             'low_risk' => 'Risiko Rendah',
             'moderate_risk' => 'Risiko Sedang',
-            'high_risk' => 'Risiko Tinggi',
+            'high_risk' => 'Preeklampsia',
             'severe_preeclampsia' => 'Preeklampsia Berat',
             default => 'Tidak Diketahui',
         };
+    }
+
+    public function getPredictionLabelAttribute(): string
+    {
+        return in_array($this->risk_category, ['high_risk', 'severe_preeclampsia'], true)
+            ? 'Preeklampsia'
+            : 'Normal';
     }
 
     /**

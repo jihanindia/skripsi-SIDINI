@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default admin user
+        $this->call(UserRoleSeeder::class);
+
+        // Create default admin user (opsional / development)
+        if (!User::where('username', 'admin')->exists()) {
         User::create([
             'name' => 'Administrator',
             'username' => 'admin',
@@ -39,6 +42,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'nurse',
         ]);
+        }
 
         $this->command->info('Default users created successfully!');
         $this->command->info('Admin - username: admin, password: password');
