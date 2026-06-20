@@ -102,6 +102,12 @@
                     <label class="form-label">IMT</label>
                     <input type="number" step="0.1" class="form-input" name="imt" readonly>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">MAP (Mean Arterial Pressure)</label>
+                    <input type="number" step="0.1" class="form-input" name="map" readonly>
+                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 70-100 mmHg</small>
+                </div>
             </div>
         </div>
 
@@ -122,12 +128,6 @@
                         <option value="3">+3</option>
                         <option value="4">+4</option>
                     </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Hemoglobin</label>
-                    <input type="number" step="0.1" class="form-input" name="hb" placeholder="" required>
-                    <!-- <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 150-400</small> -->
                 </div>
                 
                 <div class="form-group">
@@ -202,22 +202,6 @@
             </div>
         </div> -->
 
-        <!-- Risk History -->
-        <div class="form-section">
-            <h3 class="section-title">
-                <span class="section-icon">📋</span>
-                Riwayat Risiko
-            </h3>
-            
-            <div class="checkbox-grid">
-                <input type="hidden" name="riw_ht_keluarga" value="0">
-
-                <label class="checkbox-item">
-                    <input type="checkbox" name="riw_ht_keluarga" value="1">
-                    <span>Riwayat Hipertensi Keluarga</span>
-                </label>
-            </div>
-        </div>
 
         <!-- Submit Buttons -->
         <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
@@ -250,14 +234,15 @@
 
 <!-- Modal 2: Hasil deteksi -->
 <div id="modalResult" class="assessment-modal-overlay" style="display: none;" aria-hidden="true">
-    <div class="assessment-modal" id="modalResultBox">
+    <div class="assessment-modal" id="modalResultBox" style="max-width: 500px;">
         <div id="modalResultIcon" style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
         <h3 id="modalResultTitle" style="margin: 0 0 0.5rem; font-size: 1.5rem;"></h3>
         <p id="modalResultMessage" style="margin: 0 0 1rem; color: var(--color-gray-600); text-align: center; line-height: 1.6;"></p>
         <p id="modalResultPatient" style="margin: 0 0 1.5rem; font-weight: 600; color: var(--color-gray-700);"></p>
         <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
             <button type="button" class="btn btn-outline" id="btnModalClose">Tutup</button>
-            <a href="{{ route('patients.index') }}" class="btn btn-primary" id="btnModalToPatients">Lihat Data Pasien</a>
+            <a href="{{ route('patients.index') }}" class="btn btn-primary" id="btnModalToPatients">Daftar Pasien</a>
+            <a href="#" class="btn btn-success" id="btnModalDetailAkurasi">Lihat Detail & Akurasi (Confusion Matrix)</a>
         </div>
     </div>
 </div>
@@ -407,6 +392,26 @@ document.addEventListener("DOMContentLoaded", function () {
     bbInput.addEventListener('input', hitungIMT);
     tbInput.addEventListener('input', hitungIMT);
 
+    const sistolikInput = document.querySelector('[name="systolic_bp"]');
+    const diastolikInput = document.querySelector('[name="diastolic_bp"]');
+    const mapInput = document.querySelector('[name="map"]');
+
+    function hitungMAP() {
+        let sistolik = parseFloat(sistolikInput.value);
+        let diastolik = parseFloat(diastolikInput.value);
+
+        if (!sistolik || !diastolik) {
+            mapInput.value = '';
+            return;
+        }
+
+        let map = ((2 * diastolik) + sistolik) / 3;
+        mapInput.value = map.toFixed(1);
+    }
+
+    sistolikInput.addEventListener('input', hitungMAP);
+    diastolikInput.addEventListener('input', hitungMAP);
+
     const form = document.getElementById('assessmentForm');
     const modalLoading = document.getElementById('modalLoading');
     const modalResult = document.getElementById('modalResult');
@@ -423,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function () {
         el.setAttribute('aria-hidden', 'true');
     }
 
-    function showResultModal(prediction, patientName) {
+    function showResultModal(prediction, patientName, assessmentId) {
         const isPreeklampsia = prediction === 'preeklampsia';
         modalResultBox.classList.remove('modal-normal', 'modal-preeklampsia');
         modalResultBox.classList.add(isPreeklampsia ? 'modal-preeklampsia' : 'modal-normal');
@@ -437,6 +442,11 @@ document.addEventListener("DOMContentLoaded", function () {
             ? 'Berdasarkan analisis KNN, pasien berisiko mengalami preeklampsia. Segera lakukan evaluasi medis lebih lanjut.'
             : 'Berdasarkan analisis KNN, pasien dalam kondisi normal. Tetap lakukan pemantauan kehamilan secara rutin.';
         document.getElementById('modalResultPatient').textContent = 'Pasien: ' + patientName;
+
+        const detailAkurasiBtn = document.getElementById('btnModalDetailAkurasi');
+        if (detailAkurasiBtn) {
+            detailAkurasiBtn.href = "{{ route('patients.index') }}?open_detail=" + assessmentId;
+        }
     }
 
     form.addEventListener('submit', async function (e) {
@@ -485,7 +495,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            showResultModal(data.prediction, data.patient_name);
+            showResultModal(data.prediction, data.patient_name, data.assessment_id);
             showModal(modalResult);
         } catch (err) {
             hideModal(modalLoading);

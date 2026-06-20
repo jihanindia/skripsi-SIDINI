@@ -122,9 +122,8 @@
                     <th>TB (cm)</th>
                     <th>IMT</th>
                     <th>Protein Urin</th>
-                    <th>HB</th>
+                    <th>MAP</th>
                     <th>GDS</th>
-                    <th>Riw. HT Keluarga</th>
                     <th>Hasil KNN</th>
                 </tr>
             </thead>
@@ -146,9 +145,8 @@
                     <td>{{ $assessment->tinggibadan ?? '-' }}</td>
                     <td>{{ $assessment->imt ?? '-' }}</td>
                     <td>{{ $proteinLabels[$assessment->protein_urine] ?? $assessment->protein_urine }}</td>
-                    <td>{{ $assessment->hb ?? '-' }}</td>
+                    <td>{{ $assessment->map ?? '-' }}</td>
                     <td>{{ $assessment->gds ?? '-' }}</td>
-                    <td>{{ $assessment->riw_ht_keluarga ? 'Ada' : 'Tidak ada' }}</td>
                     <td>
                         @if($assessment->result)
                         <span class="report-badge {{ $isPreeklampsia ? 'badge-danger' : 'badge-success' }}">

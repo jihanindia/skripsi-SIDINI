@@ -20,8 +20,7 @@ class TrainingData extends Model
         'imt',
         'sistolik',
         'diastolik',
-        'riw_ht_keluarga',
-        'hb',
+        'map',
         'gds',
         'protein_urine',
         'diagnosis',
@@ -29,7 +28,6 @@ class TrainingData extends Model
     ];
 
     protected $casts = [
-        'riw_ht_keluarga' => 'string',
         'protein_urine' => 'string',
         'usia' => 'integer',
         'paritas' => 'integer',
@@ -38,7 +36,7 @@ class TrainingData extends Model
         'imt' => 'float',
         'sistolik' => 'integer',
         'diastolik' => 'integer',
-        'hb' => 'float',
+        'map' => 'float',
         'gds' => 'integer',
     ];
 }

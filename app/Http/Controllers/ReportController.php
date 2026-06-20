@@ -53,9 +53,8 @@ class ReportController extends Controller
                 'TB (cm)',
                 'IMT',
                 'Protein Urin',
-                'HB',
+                'MAP',
                 'GDS',
-                'Riw. HT Keluarga',
                 'Hasil KNN',
             ], ';');
 
@@ -74,9 +73,8 @@ class ReportController extends Controller
                     $assessment->tinggibadan ?? '-',
                     $assessment->imt ?? '-',
                     $this->formatProteinUrine($assessment->protein_urine),
-                    $assessment->hb ?? '-',
+                    $assessment->map ?? '-',
                     $assessment->gds ?? '-',
-                    $assessment->riw_ht_keluarga ? 'Ada' : 'Tidak ada',
                     $assessment->result?->prediction_label ?? '-',
                 ], ';');
             }

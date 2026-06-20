@@ -26,9 +26,8 @@ class Assessment extends Model
         'heart_rate',
         'temperature',
         'protein_urine',
-        'hb',
+        'map',
         'gds',
-        'riw_ht_keluarga',
         'platelets',
         'sgot',
         'sgpt',
@@ -70,7 +69,6 @@ class Assessment extends Model
         'obesity' => 'boolean',
         'autoimmune_disease' => 'boolean',
         'family_history_preeclampsia' => 'boolean',
-        'riw_ht_keluarga' => 'boolean',
         'assessment_date' => 'datetime',
     ];
 

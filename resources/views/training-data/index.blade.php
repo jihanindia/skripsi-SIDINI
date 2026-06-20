@@ -92,10 +92,12 @@
                     <th>Nama</th>
                     <th>Usia</th>
                     <th>Paritas</th>
+                    <th>BB (kg)</th>
+                    <th>TB (cm)</th>
+                    <th>IMT</th>
                     <th>Sistolik</th>
                     <th>Diastolik</th>
-                    <th>Riw_HT_Keluarga</th>
-                    <th>HB</th>
+                    <th>MAP</th>
                     <th>GDS</th>
                     <th>Protein Urin</th>
                     <th>Diagnosis Asli</th>
@@ -111,10 +113,12 @@
                         <td>{{ $data->nama }}</td>
                         <td>{{ $data->usia }}</td>
                         <td>{{ $data->paritas }}</td>
+                        <td>{{ $data->beratbadan ?? '-' }}</td>
+                        <td>{{ $data->tinggibadan ?? '-' }}</td>
+                        <td>{{ $data->imt ?? '-' }}</td>
                         <td>{{ $data->sistolik }}</td>
                         <td>{{ $data->diastolik }}</td>
-                        <td>{{ $data->riw_ht_keluarga}}</td>
-                        <td>{{ $data->hb }}</td>
+                        <td>{{ $data->map }}</td>
                         <td>{{ $data->gds }}</td>
                         <td>{{ $data->protein_urine }}</td>
                         <td>
@@ -134,7 +138,7 @@
                     @endforeach
                 @else
                 <tr>
-                    <td colspan="12" style="text-align: center; padding: 3rem; color: var(--color-gray-400);">
+                    <td colspan="15" style="text-align: center; padding: 3rem; color: var(--color-gray-400);">
                         <svg style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>

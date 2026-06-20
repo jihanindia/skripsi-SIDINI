@@ -36,16 +36,16 @@ def predict():
         
         features = [
             "usia", "paritas", "tb", "bb", "imt", 
-            "sistolik", "diastolik", "riw_ht_keluarga", 
-            "hb", "gds", "protein_urin"
+            "sistolik", "diastolik", "map",  
+            "gds", "protein_urin"
         ]
         
         X = df[features].copy()
         y = df["status"]
 
         # Preprocessing
-        categorical_features = ["riw_ht_keluarga", "protein_urin"]
-        numerical_features = ["usia", "paritas", "tb", "bb", "imt", "sistolik", "diastolik", "hb", "gds"]
+        categorical_features = ["protein_urin"]
+        numerical_features = ["usia", "paritas", "tb", "bb", "imt", "sistolik", "diastolik", "map", "gds"]
 
         preprocessor = ColumnTransformer(
             transformers=[
@@ -55,9 +55,20 @@ def predict():
         )
 
         # Gunakan K=5 sebagai default jika tidak ditentukan
+        import os
+        best_k = 5
+        metadata_path = os.path.join(os.getcwd(), 'storage', 'app', 'knn_metadata.json')
+        if os.path.exists(metadata_path):
+            try:
+                with open(metadata_path, 'r') as f:
+                    meta = json.load(f)
+                    best_k = meta.get('best_k', 5)
+            except:
+                pass
+
         model = Pipeline([
             ('preprocessor', preprocessor),
-            ('knn', KNeighborsClassifier(n_neighbors=1, metric='euclidean'))
+            ('knn', KNeighborsClassifier(n_neighbors=best_k, metric='euclidean'))
         ])
 
         model.fit(X, y)
@@ -72,18 +83,11 @@ def predict():
             "imt": float(input_data.get("imt", 0)),
             "sistolik": float(input_data.get("systolic_bp", 0)),
             "diastolik": float(input_data.get("diastolic_bp", 0)),
-            "riw_ht_keluarga": str(input_data.get("riw_ht_keluarga", "0")),
-            "hb": float(input_data.get("hb", 0)),
+            "map": float(input_data.get("map", 0)),
             "gds": float(input_data.get("gds", 0)),
             "protein_urin": str(input_data.get("protein_urine", "0"))
         }
-        
-        # Convert riw_ht_keluarga 1/0 to Ada/Tidak ada if necessary
-        if input_mapped["riw_ht_keluarga"] == "1":
-            input_mapped["riw_ht_keluarga"] = "Ada"
-        else:
-            input_mapped["riw_ht_keluarga"] = "Tidak ada"
-            
+      
         # Convert protein_urin to PositifX/Negatif
         pu = input_mapped["protein_urin"]
         if pu == "0":

@@ -14,7 +14,7 @@ class TrainingDataController extends Controller
         $trainingData = \App\Models\TrainingData::all();
 
         $metadata = [];
-        if (file_exists(storage_path('app/knn_metadata.json'))) {
+        if ($trainingData->count() > 0 && file_exists(storage_path('app/knn_metadata.json'))) {
             $metadata = json_decode(file_get_contents(storage_path('app/knn_metadata.json')), true);
         }
 
@@ -102,8 +102,7 @@ class TrainingDataController extends Controller
                         'imt' => $row['imt'] ?? null,
                         'sistolik' => $row['sistol'] ?? $row['sistolik'] ?? null,
                         'diastolik' => $row['diastol'] ?? $row['diastolik'] ?? null,
-                        'riw_ht_keluarga' => $row['riw_ht_keluarga'] ?? null,
-                        'hb' => $row['hb'] ?? null,
+                        'map' => $row['map'] ?? null,
                         'gds' => $row['gds'] ?? null,
                         'protein_urine' => $row['protein_urin'] ?? $row['protein_urine'] ?? null,
                         'diagnosis' => strtolower($row['status'] ?? 'normal'),
@@ -120,6 +119,8 @@ class TrainingDataController extends Controller
                 file_put_contents(storage_path('app/knn_metadata.json'), json_encode([
                     'accuracy' => $accuracy,
                     'best_k' => $best_k,
+                    'confusion_matrix' => $parsedData['confusion_matrix'] ?? null,
+                    'classification_report' => $parsedData['classification_report'] ?? null,
                     'trained_at' => now()->toDateTimeString(),
                     'total_records' => count($insertData),
                 ]));

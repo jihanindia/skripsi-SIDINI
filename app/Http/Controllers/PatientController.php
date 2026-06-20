@@ -18,7 +18,12 @@ class PatientController extends Controller
 
         $showPuskesmasColumn = auth()->user()->isDinas();
 
-        return view('patients.index', compact('assessments', 'showPuskesmasColumn'));
+        $metadata = [];
+        if (file_exists(storage_path('app/knn_metadata.json'))) {
+            $metadata = json_decode(file_get_contents(storage_path('app/knn_metadata.json')), true) ?? [];
+        }
+
+        return view('patients.index', compact('assessments', 'showPuskesmasColumn', 'metadata'));
     }
 
     public function create()

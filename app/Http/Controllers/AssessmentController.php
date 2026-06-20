@@ -27,9 +27,8 @@ class AssessmentController extends Controller
             'tinggibadan' => 'required|numeric',
             'imt' => 'required|numeric',
             'protein_urine' => 'required',
-            'hb' => 'required|numeric',
             'gds' => 'nullable|numeric',
-            'riw_ht_keluarga' => 'required',
+            'map' => 'nullable|numeric',
         ]);
 
         $patient = Patient::firstOrCreate(
@@ -43,6 +42,10 @@ class AssessmentController extends Controller
 
         $patient->update(['age' => (int) $validated['usia']]);
         $validated['patient_id'] = $patient->id;
+
+        // Calculate map (Mean Arterial Pressure) in backend
+        $map = ((2 * (int)$validated['diastolic_bp']) + (int)$validated['systolic_bp']) / 3;
+        $validated['map'] = $map;
 
         $prediction = $this->runKnnPrediction($validated);
         $predictionLabel = $prediction === 'preeklampsia' ? 'Preeklampsia' : 'Normal';
@@ -60,10 +63,8 @@ class AssessmentController extends Controller
             'tinggibadan' => (int) $validated['tinggibadan'],
             'imt' => $validated['imt'],
             'protein_urine' => $this->mapProteinUrine($validated['protein_urine']),
-            'hb' => $validated['hb'],
+            'map' => $map,
             'gds' => $validated['gds'] ?? null,
-            'riw_ht_keluarga' => (bool) $validated['riw_ht_keluarga'],
-            'family_history_preeclampsia' => (bool) $validated['riw_ht_keluarga'],
             'assessment_date' => $validated['assessment_date'],
         ]);
 
@@ -86,6 +87,7 @@ class AssessmentController extends Controller
                 'prediction' => $prediction,
                 'prediction_label' => $predictionLabel,
                 'patient_name' => $patient->name,
+                'assessment_id' => $assessment->id,
                 'redirect' => route('patients.index'),
             ]);
         }
@@ -94,6 +96,72 @@ class AssessmentController extends Controller
             'success' => 'Penilaian berhasil disimpan.',
             'prediction' => $prediction,
             'prediction_label' => $predictionLabel,
+        ]);
+    }
+
+    public function update(Request $request, Assessment $assessment)
+    {
+        $validated = $request->validate([
+            'assessment_date' => 'required|date',
+            'usia'            => 'required|numeric',
+            'paritas'         => 'required|numeric',
+            'systolic_bp'     => 'required|numeric',
+            'diastolic_bp'    => 'required|numeric',
+            'beratbadan'      => 'required|numeric',
+            'tinggibadan'     => 'required|numeric',
+            'imt'             => 'required|numeric',
+            'protein_urine'   => 'required',
+            'gds'             => 'nullable|numeric',
+        ]);
+
+        $map = ((2 * (int)$validated['diastolic_bp']) + (int)$validated['systolic_bp']) / 3;
+
+        // Re-run KNN prediction
+        $inputData = array_merge($validated, [
+            'map'      => $map,
+            'tinggibadan' => $validated['tinggibadan'],
+            'beratbadan'  => $validated['beratbadan'],
+        ]);
+        $prediction = $this->runKnnPrediction($inputData);
+        $predictionLabel = $prediction === 'preeklampsia' ? 'Preeklampsia' : 'Normal';
+
+        // Update assessment
+        $assessment->update([
+            'gravida'      => (int) $validated['paritas'],
+            'para'         => (int) $validated['paritas'],
+            'systolic_bp'  => (int) $validated['systolic_bp'],
+            'diastolic_bp' => (int) $validated['diastolic_bp'],
+            'beratbadan'   => $validated['beratbadan'],
+            'tinggibadan'  => (int) $validated['tinggibadan'],
+            'imt'          => $validated['imt'],
+            'protein_urine'=> $this->mapProteinUrine($validated['protein_urine']),
+            'map'          => $map,
+            'gds'          => $validated['gds'] ?? null,
+            'assessment_date' => $validated['assessment_date'],
+        ]);
+
+        // Update patient age
+        $assessment->patient->update(['age' => (int) $validated['usia']]);
+
+        // Update result
+        if ($assessment->result) {
+            $assessment->result->update([
+                'risk_category'   => $prediction === 'preeklampsia' ? 'high_risk' : 'no_risk',
+                'severity_level'  => $prediction === 'preeklampsia' ? 'moderate' : 'none',
+                'recommendations' => $prediction === 'preeklampsia'
+                    ? ['Segera konsultasi dokter spesialis obstetri', 'Monitor tekanan darah secara rutin']
+                    : ['Lanjutkan pemeriksaan kehamilan rutin', 'Pantau tanda vital secara berkala'],
+                'urgency_level'   => $prediction === 'preeklampsia' ? 'urgent' : 'routine',
+            ]);
+        }
+
+        return response()->json([
+            'success'          => true,
+            'prediction'       => $prediction,
+            'prediction_label' => $predictionLabel,
+            'assessment_id'    => $assessment->id,
+            'map'              => round($map, 1),
+            'imt'              => round((float)$validated['imt'], 1),
         ]);
     }
 

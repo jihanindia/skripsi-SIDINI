@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:puskesmas')->group(function () {
         Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
         Route::post('/assessments/create', [AssessmentController::class, 'store'])->name('assessments.store');
+        Route::put('/assessments/{assessment}', [AssessmentController::class, 'update'])->name('assessments.update');
 
         Route::get('/training-data', [TrainingDataController::class, 'index'])->name('training-data.index');
         Route::post('/training-data/train', [TrainingDataController::class, 'train'])->name('training-data.train');
