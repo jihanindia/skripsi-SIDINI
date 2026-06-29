@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Data Pasien - Preeklampsia CDSS')
+@section('title', 'Data Pasien - SIDINI')
 @section('page-title', 'Data Pasien & Hasil Screening')
 @section('page-subtitle')
 @if(auth()->user()->isPuskesmas())
@@ -212,14 +212,34 @@
             {{-- Kolom Kanan - Model & Confusion Matrix --}}
             <div class="patient-modal-col">
                 @php
-                    $hasCM = !empty($metadata) && isset($metadata['confusion_matrix']);
-                    $tn2 = $hasCM ? ($metadata['confusion_matrix'][0][0] ?? 0) : null;
-                    $fp2 = $hasCM ? ($metadata['confusion_matrix'][0][1] ?? 0) : null;
-                    $fn2 = $hasCM ? ($metadata['confusion_matrix'][1][0] ?? 0) : null;
-                    $tp2 = $hasCM ? ($metadata['confusion_matrix'][1][1] ?? 0) : null;
-                    $sens  = ($hasCM && ($tp2 + $fn2) > 0) ? round($tp2 / ($tp2 + $fn2) * 100, 1) : null;
-                    $spec  = ($hasCM && ($tn2 + $fp2) > 0) ? round($tn2 / ($tn2 + $fp2) * 100, 1) : null;
-                    $prec  = ($hasCM && ($tp2 + $fp2) > 0) ? round($tp2 / ($tp2 + $fp2) * 100, 1) : null;
+                    $hasCM = !empty($metadata) && !empty($metadata['confusion_matrix']) && is_array($metadata['confusion_matrix']);
+
+                    // Identifikasi posisi label secara dinamis
+                    $cmLabels   = $metadata['confusion_matrix_labels'] ?? null;
+
+                    // Jika labels tersedia, cari indeks Normal vs Preeklampsia
+                    $normalIdx = 0; $preIdx = 1;  // default asumsi
+                    if ($cmLabels) {
+                        foreach ($cmLabels as $i => $lbl) {
+                            $lowerLbl = strtolower($lbl);
+                            if (str_contains($lowerLbl, 'avg') || str_contains($lowerLbl, 'accuracy')) {
+                                continue;
+                            }
+                            if (str_contains($lowerLbl, 'pre')) {
+                                $preIdx   = $i;
+                            } else {
+                                $normalIdx = $i;
+                            }
+                        }
+                    }
+
+                    $tn2  = $hasCM ? ($metadata['confusion_matrix'][$normalIdx][$normalIdx] ?? 0) : null;
+                    $fp2  = $hasCM ? ($metadata['confusion_matrix'][$normalIdx][$preIdx]    ?? 0) : null;
+                    $fn2  = $hasCM ? ($metadata['confusion_matrix'][$preIdx][$normalIdx]    ?? 0) : null;
+                    $tp2  = $hasCM ? ($metadata['confusion_matrix'][$preIdx][$preIdx]       ?? 0) : null;
+                    $sens = ($hasCM && ($tp2 + $fn2) > 0) ? round($tp2 / ($tp2 + $fn2) * 100, 1) : null;
+                    $spec = ($hasCM && ($tn2 + $fp2) > 0) ? round($tn2 / ($tn2 + $fp2) * 100, 1) : null;
+                    $prec = ($hasCM && ($tp2 + $fp2) > 0) ? round($tp2 / ($tp2 + $fp2) * 100, 1) : null;
                 @endphp
                 <div class="modal-section-box">
                     <h3 class="modal-section-title">🤖 Performa Model KNN</h3>
@@ -248,7 +268,12 @@
                     </div>
                     @else
                     <div style="text-align:center;padding:1rem;color:var(--color-gray-400);font-size:0.85rem;">
-                        Belum ada data pelatihan model.<br>Upload dataset CSV di menu Training.
+                        @if(!empty($metadata))
+                            Data model tersedia namun confusion matrix belum terbaca.<br>
+                            <span style="font-size:0.78rem;">Silakan latih ulang model di menu <strong>Training</strong>.</span>
+                        @else
+                            Belum ada data pelatihan model.<br>Upload dataset CSV di menu Training.
+                        @endif
                     </div>
                     @endif
                 </div>
@@ -289,7 +314,12 @@
                     </p>
                     @else
                     <div style="text-align:center;padding:1rem;color:var(--color-gray-400);font-size:0.85rem;">
-                        Confusion Matrix belum tersedia.<br>Upload dataset dan latih model terlebih dahulu.
+                        @if(!empty($metadata))
+                            Confusion Matrix belum tersedia.<br>
+                            <span style="font-size:0.78rem;">Latih ulang model di menu <strong>Training</strong> untuk memperbarui data ini.</span>
+                        @else
+                            Confusion Matrix belum tersedia.<br>Upload dataset dan latih model terlebih dahulu.
+                        @endif
                     </div>
                     @endif
                 </div>

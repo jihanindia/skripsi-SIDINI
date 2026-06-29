@@ -64,7 +64,7 @@ for col in df.columns:
 df = df.dropna().reset_index(drop=True)
 
 # Calculate map (Mean Arterial Pressure)
-df['map'] = ((2 * df['diastolik']) + df['sistolik']) / 3
+# df['map'] = ((2 * df['diastolik']) + df['sistolik']) / 3
 
 # =========================
 # 4. PILIH FITUR
@@ -140,7 +140,7 @@ preprocessor = ColumnTransformer(
 # =========================
 # 8. TUNING K
 # =========================
-k_values = [3, 5, 7, 9, 11, 13, 15]
+k_values = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]
 
 best_k = 0
 best_cv_acc = 0

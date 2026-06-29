@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('page-title', 'Dashboard')
-@section('page-subtitle', 'Ringkasan sistem dan statistik penilaian risiko preeklampsia')
+<!-- @section('page-subtitle', 'Ringkasan siste dan statistik penilaian risiko preeklampsia') -->
 
 @section('content')
 <!-- Disclaimer Medical -->
@@ -93,7 +93,7 @@
 </div>
 
 <!-- Gambar Dashboard KNN -->
-<div class="medical-card fade-in" style="animation-delay: 0.45s; margin-bottom: 1.5rem; padding: 1rem;">
+<!-- <div class="medical-card fade-in" style="animation-delay: 0.45s; margin-bottom: 1.5rem; padding: 1rem;">
     <img 
         src="{{ asset('assets/dashboard_knn.png') }}" 
         alt="Dashboard KNN"
@@ -105,7 +105,7 @@
             object-fit: cover;
         "
     >
-</div>
+</div> -->
 
 <!-- Grafik perkembangan penilaian -->
 <div class="medical-card fade-in chart-card" style="animation-delay: 0.5s;">

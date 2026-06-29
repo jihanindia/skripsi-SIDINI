@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Penilaian Baru - Preeklampsia CDSS')
+@section('title', 'Penilaian Baru - SIDINI')
 @section('page-title', 'Penilaian Risiko Preeklampsia')
 @section('page-subtitle', 'Form penilaian komprehensif berbasis algoritma K-Nearest Neighbors (KNN)')
 

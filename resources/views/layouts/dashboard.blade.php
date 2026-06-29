@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard - Preeklampsia CDSS')</title>
+    <title>@yield('title', 'Dashboard - SIDINI (Sistem Deteksi Dini Preeklampsia)')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,16 +11,16 @@
 </head>
 <body style="background: var(--color-gray-100);">
     <!-- Sidebar -->
-    <div id="sidebar" style="position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.05); z-index: 1000; transition: transform 0.3s ease;">
+    <div id="sidebar" style="position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: linear-gradient(180deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%); box-shadow: 4px 0 20px rgba(236,64,122,0.2); z-index: 1000; transition: transform 0.3s ease;">
         <!-- Logo -->
-        <div style="padding: 2rem 1.5rem; border-bottom: 1px solid var(--color-gray-200);">
+        <div style="padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div class="medical-icon icon-primary" style="width: 50px; height: 50px; font-size: 25px;">
                     🏥
                 </div>
                 <div>
-                    <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--color-gray-800); margin: 0;">CDSS</h2>
-                    <p style="font-size: 0.75rem; color: var(--color-gray-500); margin: 0;">Preeklampsia</p>
+                    <h2 style="font-size: 1.25rem; font-weight: 700; color: #880e4f; margin: 0;">SIDINI</h2>
+                    <p style="font-size: 0.75rem; color: #c2185b; margin: 0;">Sistem Deteksi Dini Preeklampsia</p>
                 </div>
             </div>
         </div>
@@ -60,25 +60,61 @@
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
-                Training
+                Tuning K
             </a>
+            
+            <div class="dropdown-group {{ request()->routeIs('predictions.*') ? 'open' : '' }}" style="margin-top: 0.25rem;">
+                <button class="nav-link dropdown-trigger" onclick="toggleDropdown(this)" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; outline: none; color: #ad1457;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <svg style="width: 20px; height: 20px; color: #ad1457; transition: color 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="8" y1="18" x2="8" y2="14"></line>
+                            <line x1="12" y1="18" x2="12" y2="10"></line>
+                            <line x1="16" y1="18" x2="16" y2="13"></line>
+                        </svg>
+                        <span style="font-weight: 500; color: #ad1457; transition: color 0.2s;">Prediksi Data</span>
+                    </div>
+                    <svg class="dropdown-caret" style="width: 16px; height: 16px; color: #c2185b; transition: all 0.3s ease; transform: {{ request()->routeIs('predictions.*') ? 'rotate(180deg)' : 'none' }};" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="submenu-container" style="display: {{ request()->routeIs('predictions.*') ? 'block' : 'none' }};">
+                    <a href="{{ route('predictions.training.index') }}" class="submenu-item {{ request()->routeIs('predictions.training.*') ? 'active' : '' }}">
+                        <div class="submenu-icon-wrap">
+                            <svg style="width: 18px; height: 18px; color: #c2185b;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                        <span>Prediksi Data Latih</span>
+                    </a>
+                    <a href="{{ route('predictions.test.index') }}" class="submenu-item {{ request()->routeIs('predictions.test.*') ? 'active' : '' }}">
+                        <div class="submenu-icon-wrap">
+                            <svg style="width: 18px; height: 18px; color: #c2185b;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path>
+                            </svg>
+                        </div>
+                        <span>Prediksi Data Uji</span>
+                    </a>
+                </div>
+            </div>
             @endif
         </nav>
 
         <!-- User Info -->
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; border-top: 1px solid var(--color-gray-200);">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2);">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
                 <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #EC407A, #880E4F); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
                     {{ substr(auth()->user()->name, 0, 1) }}
                 </div>
                 <div style="flex: 1;">
-                    <p style="font-weight: 600; color: var(--color-gray-800); margin: 0; font-size: 0.9rem;">{{ auth()->user()->name }}</p>
-                    <p style="font-size: 0.75rem; color: var(--color-gray-500); margin: 0;">{{ auth()->user()->role_label }}</p>
+                    <p style="font-weight: 600; color: #880e4f; margin: 0; font-size: 0.9rem;">{{ auth()->user()->name }}</p>
+                    <p style="font-size: 0.75rem; color: #c2185b; margin: 0;">{{ auth()->user()->role_label }}</p>
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn btn-outline w-full" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                <button type="submit" class="btn w-full" style="padding: 0.5rem 1rem; font-size: 0.875rem; background: linear-gradient(135deg, #c2185b, #880e4f); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(136,14,79,0.3);" onmouseover="this.style.background='linear-gradient(135deg, #880e4f, #560027)'; this.style.boxShadow='0 4px 12px rgba(136,14,79,0.45)'" onmouseout="this.style.background='linear-gradient(135deg, #c2185b, #880e4f)'; this.style.boxShadow='0 2px 8px rgba(136,14,79,0.3)'">
                     <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                     </svg>
@@ -95,7 +131,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div>
                     <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--color-gray-800); margin: 0;">@yield('page-title', 'Dashboard')</h1>
-                    <p style="color: var(--color-gray-500); font-size: 0.875rem; margin: 0.25rem 0 0 0;">@yield('page-subtitle', 'Selamat datang di Preeklampsia CDSS')</p>
+                    <p style="color: var(--color-gray-500); font-size: 0.875rem; margin: 0.25rem 0 0 0;">@yield('page-subtitle', 'Selamat datang di SIDINI (Sistem Deteksi Dini Preeklampsia)')</p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <div style="position: relative;">
@@ -120,7 +156,7 @@
             align-items: center;
             gap: 0.75rem;
             padding: 0.875rem 1.5rem;
-            color: var(--color-gray-600);
+            color: #ad1457;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.2s ease;
@@ -128,19 +164,86 @@
         }
 
         .nav-link:hover {
-            background: var(--color-gray-50);
-            color: var(--color-medical-primary);
-            border-left-color: var(--color-medical-primary);
+            background: rgba(255,255,255,0.5);
+            color: #880e4f;
+            border-left-color: #c2185b;
         }
 
         .nav-link.active {
-            background: linear-gradient(90deg, rgba(216, 27, 96, 0.1), transparent);
-            color: var(--color-medical-primary);
-            border-left-color: var(--color-medical-primary);
+            background: rgba(255,255,255,0.6);
+            color: #880e4f;
+            border-left-color: #c2185b;
+            font-weight: 700;
         }
 
         .nav-link svg {
             flex-shrink: 0;
+        }
+
+        /* Dropdown Sidebar Styles */
+        .submenu-container {
+            position: relative;
+            margin-left: 2.3rem;
+            border-left: 2px solid rgba(255,255,255,0.5);
+            padding-left: 0.75rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .submenu-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.85rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: rgba(136,14,79,0.8);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(194,24,91,0.15);
+            box-shadow: 0 1px 2px rgba(136,14,79,0.05);
+        }
+        .submenu-item:hover, .submenu-item.active {
+            background: rgba(255,255,255,0.75);
+            color: #880e4f;
+            transform: translateX(2px);
+            box-shadow: 0 4px 10px rgba(136,14,79,0.1);
+        }
+        .submenu-item::before {
+            content: "";
+            position: absolute;
+            left: -0.75rem;
+            top: 50%;
+            width: 0.75rem;
+            height: 2px;
+            background: rgba(255,255,255,0.6);
+        }
+        .submenu-icon-wrap {
+            background: rgba(255,255,255,0.25);
+            border-radius: 6px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .dropdown-group.open .dropdown-trigger {
+            color: #880e4f;
+        }
+        .dropdown-group.open .dropdown-trigger span {
+            color: #880e4f !important;
+            font-weight: 600;
+        }
+        .dropdown-group.open .dropdown-trigger svg:first-child {
+            color: #880e4f !important;
+        }
+        .dropdown-group.open .dropdown-caret {
+            transform: rotate(180deg) !important;
+            color: #880e4f;
         }
 
         @media (max-width: 768px) {
@@ -157,5 +260,22 @@
             }
         }
     </style>
+    <script>
+        function toggleDropdown(btn) {
+            const group = btn.closest('.dropdown-group');
+            const submenu = group.querySelector('.submenu-container');
+            const caret = group.querySelector('.dropdown-caret');
+            
+            if (submenu.style.display === 'none' || submenu.style.display === '') {
+                submenu.style.display = 'block';
+                group.classList.add('open');
+                caret.style.transform = 'rotate(180deg)';
+            } else {
+                submenu.style.display = 'none';
+                group.classList.remove('open');
+                caret.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
 </body>
 </html>

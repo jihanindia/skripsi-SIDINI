@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - Preeklampsia CDSS')
+@section('title', 'Login - SIDINI')
 
 @section('content')
 <!-- Animated Background -->
@@ -21,8 +21,8 @@
                     </svg>
                 </div>
             </div>
-            <h1 class="login-title">Preeklampsia CDSS</h1>
-            <p class="login-subtitle">Clinical Decision Support System</p>
+            <h1 class="login-title">SIDINI</h1>
+            <p class="login-subtitle">Sistem Deteksi Dini Preeklampsia</p>
             <div class="title-underline"></div>
         </div>
 
@@ -121,8 +121,8 @@
 
         <!-- Footer -->
         <div class="login-footer">
-            <p>© 2026 Preeklampsia CDSS</p>
-            <p>Sistem Pendukung Keputusan Klinis Berbasis KNN</p>
+            <p>© 2026 SIDINI</p>
+            <p>Sistem Deteksi Dini Preeklampsia Berbasis KNN</p>
         </div>
     </div>
 </div>

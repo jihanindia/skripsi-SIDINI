@@ -7,6 +7,7 @@ use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PredictionController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -39,5 +40,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/training-data', [TrainingDataController::class, 'index'])->name('training-data.index');
         Route::post('/training-data/train', [TrainingDataController::class, 'train'])->name('training-data.train');
+
+        // Prediksi data uji CSV
+        Route::get('/predictions', function() { return redirect()->route('predictions.test.index'); })->name('predictions.index');
+        Route::get('/predictions/test', [PredictionController::class, 'indexTest'])->name('predictions.test.index');
+        Route::post('/predictions/test/predict', [PredictionController::class, 'predictTest'])->name('predictions.test.predict');
+        Route::get('/predictions/test/result', [PredictionController::class, 'resultTest'])->name('predictions.test.result');
+
+        // Prediksi data latih CSV
+        Route::get('/predictions/training', [PredictionController::class, 'indexTraining'])->name('predictions.training.index');
+        Route::post('/predictions/training/predict', [PredictionController::class, 'predictTraining'])->name('predictions.training.predict');
+        Route::get('/predictions/training/result', [PredictionController::class, 'resultTraining'])->name('predictions.training.result');
     });
 });

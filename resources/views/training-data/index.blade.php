@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Data Training - Preeklampsia CDSS')
+@section('title', 'Data Training - SIDINI')
 @section('page-title', 'Data Training KNN')
 @section('page-subtitle', 'Manajemen dataset untuk algoritma K-Nearest Neighbors')
 
@@ -64,7 +64,7 @@
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                 </svg>
-                Pilih Data CSV
+                Pilih File CSV
             </button>
             <span id="file-name" style="color: var(--color-gray-600); font-size: 0.875rem; font-weight: 500;">Belum ada file dipilih</span>
         </div>
@@ -176,4 +176,210 @@
         </div>
     </div>
 </div>
+
+{{-- ============================== --}}
+{{-- CONFUSION MATRIX & EVALUASI --}}
+{{-- ============================== --}}
+@if(isset($metadata['confusion_matrix']) && is_array($metadata['confusion_matrix']))
+<div class="medical-card fade-in" style="margin-top: 2rem; animation-delay: 0.2s;">
+    <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-gray-800); margin: 0 0 1.5rem 0;">
+        📊 Confusion Matrix & Evaluasi Model
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+        {{-- CONFUSION MATRIX GRID --}}
+        <div>
+            <p style="font-weight: 600; color: var(--color-gray-700); margin: 0 0 1rem 0; font-size: 0.9rem;">Confusion Matrix</p>
+
+            @php
+                $cm     = $metadata['confusion_matrix'];
+                $labels = $metadata['confusion_matrix_labels'] ?? [];
+
+                // Fallback labels jika kosong
+                if (empty($labels)) {
+                    $labels = count($cm) === 2 ? ['Normal', 'Preeklampsia'] : array_map(fn($i) => "Kelas $i", range(0, count($cm)-1));
+                }
+
+                $n = count($labels);
+
+                // Warna sel berdasarkan diagonal (TP) vs off-diagonal (FP/FN)
+                $cellColors = [
+                    'diagonal'    => ['bg' => '#d1fae5', 'color' => '#065f46'],
+                    'off_diagonal'=> ['bg' => '#fee2e2', 'color' => '#991b1b'],
+                ];
+            @endphp
+
+            <div style="overflow-x: auto;">
+                <table style="border-collapse: separate; border-spacing: 4px; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0.5rem; font-size: 0.7rem; color: var(--color-gray-500); text-align: center; background: transparent;"></th>
+                            <th colspan="{{ $n }}" style="padding: 0.5rem 0.25rem; font-size: 0.72rem; font-weight: 700; color: var(--color-gray-700); text-align: center; background: #f1f5f9; border-radius: 6px;">
+                                Prediksi
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="padding: 0.4rem; font-size: 0.68rem; color: var(--color-gray-500); text-align: center; font-weight: 700; background: #f1f5f9; border-radius: 6px; writing-mode: vertical-rl; transform: rotate(180deg); min-width: 40px;">
+                                Aktual
+                            </th>
+                            @foreach($labels as $label)
+                            <th style="padding: 0.5rem 0.75rem; font-size: 0.7rem; font-weight: 700; color: var(--color-gray-700); text-align: center; background: #e2e8f0; border-radius: 6px; max-width: 100px; word-break: break-word;">
+                                {{ ucfirst($label) }}
+                            </th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($cm as $rowIdx => $row)
+                        <tr>
+                            <td style="padding: 0.5rem 0.75rem; font-size: 0.7rem; font-weight: 700; color: var(--color-gray-700); text-align: center; background: #e2e8f0; border-radius: 6px; max-width: 100px; word-break: break-word;">
+                                {{ ucfirst($labels[$rowIdx] ?? "Kelas $rowIdx") }}
+                            </td>
+                            @foreach($row as $colIdx => $val)
+                            @php
+                                $isDiag = ($rowIdx === $colIdx);
+                                $bgColor    = $isDiag ? '#d1fae5' : '#fee2e2';
+                                $textColor  = $isDiag ? '#065f46' : '#991b1b';
+                                $label_hint = $isDiag ? 'TP' : ($rowIdx < $colIdx ? 'FN' : 'FP');
+                            @endphp
+                            <td title="{{ $label_hint }}: {{ $val }}" style="
+                                    padding: 0.85rem 1rem;
+                                    text-align: center;
+                                    font-size: 1.25rem;
+                                    font-weight: 800;
+                                    background-color: {{ $bgColor }};
+                                    color: {{ $textColor }};
+                                    border-radius: 8px;
+                                    min-width: 70px;
+                                    position: relative;
+                                ">
+                                {{ $val }}
+                                <span style="display: block; font-size: 0.6rem; font-weight: 500; opacity: 0.7; margin-top: 2px;">
+                                    {{ $isDiag ? '✓ Benar' : '✗ Salah' }}
+                                </span>
+                            </td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Legend --}}
+            <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--color-gray-600);">
+                    <span style="width: 14px; height: 14px; border-radius: 3px; background: #d1fae5; display:inline-block;"></span> Prediksi Benar (Diagonal)
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--color-gray-600);">
+                    <span style="width: 14px; height: 14px; border-radius: 3px; background: #fee2e2; display:inline-block;"></span> Prediksi Salah
+                </div>
+            </div>
+        </div>
+
+        {{-- PRECISION, RECALL, F1-SCORE --}}
+        @if(isset($metadata['classification_report']) && is_array($metadata['classification_report']))
+        @php
+            $report = $metadata['classification_report'];
+            $classMetrics = [];
+            foreach ($report as $key => $val) {
+                if (is_array($val) && isset($val['precision']) && !str_contains(strtolower($key), 'avg')) {
+                    $classMetrics[$key] = $val;
+                }
+            }
+            $avgKeys = ['macro avg', 'weighted avg', 'accuracy'];
+        @endphp
+        <div>
+            <p style="font-weight: 600; color: var(--color-gray-700); margin: 0 0 1rem 0; font-size: 0.9rem;">Metrik per Kelas</p>
+
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                @foreach($classMetrics as $className => $metrics)
+                @php
+                    $precision = round(($metrics['precision'] ?? 0) * 100, 1);
+                    $recall    = round(($metrics['recall'] ?? 0) * 100, 1);
+                    $f1        = round(($metrics['f1-score'] ?? 0) * 100, 1);
+                    $support   = $metrics['support'] ?? 0;
+                    $isPreek   = str_contains(strtolower($className), 'preeklampsia') || str_contains(strtolower($className), 'pre');
+                    $badgeColor = $isPreek ? '#fee2e2' : '#d1fae5';
+                    $badgeText  = $isPreek ? '#991b1b' : '#065f46';
+                @endphp
+                <div style="background: #f8fafc; border-radius: 10px; padding: 1rem 1.25rem; border: 1px solid #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span style="
+                            padding: 0.2rem 0.65rem;
+                            border-radius: 9999px;
+                            font-size: 0.72rem;
+                            font-weight: 700;
+                            background-color: {{ $badgeColor }};
+                            color: {{ $badgeText }};
+                        ">{{ ucwords($className) }}</span>
+                        <span style="font-size: 0.7rem; color: var(--color-gray-500);">Support: {{ $support }}</span>
+                    </div>
+
+                    {{-- Precision --}}
+                    <div style="margin-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.2rem;">
+                            <span style="font-size: 0.72rem; color: var(--color-gray-600); font-weight: 600;">Precision</span>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: #1e40af;">{{ $precision }}%</span>
+                        </div>
+                        <div style="background: #e2e8f0; border-radius: 999px; height: 6px;">
+                            <div style="width: {{ $precision }}%; background: linear-gradient(90deg, #3b82f6, #1d4ed8); border-radius: 999px; height: 6px; transition: width 0.6s ease;"></div>
+                        </div>
+                    </div>
+
+                    {{-- Recall --}}
+                    <div style="margin-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.2rem;">
+                            <span style="font-size: 0.72rem; color: var(--color-gray-600); font-weight: 600;">Recall</span>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: #059669;">{{ $recall }}%</span>
+                        </div>
+                        <div style="background: #e2e8f0; border-radius: 999px; height: 6px;">
+                            <div style="width: {{ $recall }}%; background: linear-gradient(90deg, #10b981, #059669); border-radius: 999px; height: 6px; transition: width 0.6s ease;"></div>
+                        </div>
+                    </div>
+
+                    {{-- F1-Score --}}
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.2rem;">
+                            <span style="font-size: 0.72rem; color: var(--color-gray-600); font-weight: 600;">F1-Score</span>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: #7c3aed;">{{ $f1 }}%</span>
+                        </div>
+                        <div style="background: #e2e8f0; border-radius: 999px; height: 6px;">
+                            <div style="width: {{ $f1 }}%; background: linear-gradient(90deg, #8b5cf6, #6d28d9); border-radius: 999px; height: 6px; transition: width 0.6s ease;"></div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            {{-- Macro & Weighted Avg --}}
+            @if(isset($report['macro avg']) || isset($report['weighted avg']))
+            <div style="margin-top: 1rem; background: linear-gradient(135deg, #eff6ff, #f5f3ff); border-radius: 10px; padding: 0.85rem 1.25rem; border: 1px solid #c7d2fe;">
+                <p style="font-size: 0.75rem; font-weight: 700; color: var(--color-gray-700); margin: 0 0 0.6rem 0;">📈 Rata-Rata Keseluruhan</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    @foreach(['macro avg', 'weighted avg'] as $avgKey)
+                    @if(isset($report[$avgKey]))
+                    @php $avg = $report[$avgKey]; @endphp
+                    <div style="background: white; border-radius: 8px; padding: 0.6rem 0.75rem;">
+                        <p style="font-size: 0.65rem; font-weight: 700; color: var(--color-gray-500); margin: 0 0 0.35rem 0; text-transform: uppercase; letter-spacing: 0.04em;">{{ ucwords($avgKey) }}</p>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <span style="font-size: 0.68rem; color: #1e40af; font-weight: 600;">P: {{ round(($avg['precision'] ?? 0)*100, 1) }}%</span>
+                            <span style="font-size: 0.68rem; color: #059669; font-weight: 600;">R: {{ round(($avg['recall'] ?? 0)*100, 1) }}%</span>
+                            <span style="font-size: 0.68rem; color: #7c3aed; font-weight: 600;">F1: {{ round(($avg['f1-score'] ?? 0)*100, 1) }}%</span>
+                        </div>
+                    </div>
+                    @endif
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+        </div>
+        @endif
+
+    </div>
+</div>
+@endif
+
 @endsection
+

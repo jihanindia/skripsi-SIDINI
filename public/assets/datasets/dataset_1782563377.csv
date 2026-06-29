@@ -20,7 +20,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 27,PI027,36,4,152,63.8,27.6,124,85,98,10.1,101,Negatif,Normal
 28,PI028,37,2,158,62.1,24.9,134,78,97,12.2,88,Negatif,Normal
 29,PI029,26,1,163,80,30.1,115,72,86,11.1,187,Positif2,Preeklampsia
-30,PI030,27,1,156,56.4,23.2,105,48,67,10,96,Positif1,Normal
+30,PI030,27,1,156,56.4,23.2,105,80,88,10,96,Negatif,Normal
 31,PI031,22,1,161,88.6,34.2,120,78,92,13.1,84,Negatif,Normal
 33,PI033,30,0,150,45.2,20.1,102,62,75,9.1,108,Negatif,Normal
 34,PI034,25,0,160,61.2,23.9,111,71,84,12.1,104,Negatif,Normal
@@ -34,6 +34,8 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 45,PI045,24,0,162,81.6,31.1,124,88,100,12.1,90,Negatif,Normal
 46,PI046,30,2,158,73.5,29.4,133,85,101,11.1,118,Positif1,Normal
 49,PI049,25,1,156,51,21,100,66,77,11.1,86,Negatif,Normal
+50,PI050,32,1,157,71.4,29,131,76,94,9.1,125,Negatif,Normal
+51,PI051,23,0,151,51.7,22.7,101,64,76,12.1,125,Negatif,Normal
 53,PI053,40,2,152,59,25.5,135,97,110,9.3,86,Positif2,Preeklampsia
 54,PI054,27,0,155,45,18.7,110,68,82,12.1,101,Negatif,Normal
 55,PI055,34,3,156,62,25.5,106,63,77,10.2,85,Positif1,Normal
@@ -53,6 +55,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 69,PI069,27,0,163,44,16.6,98,71,80,11.4,78,Negatif,Normal
 70,PI070,36,0,155,74,30.8,156,114,128,11.2,93,Positif2,Preeklampsia
 72,PI072,30,3,156,68.1,28,154,97,116,11.1,86,Negatif,Normal
+73,PI073,29,3,157,63.8,25.9,101,63,76,13.1,120,Negatif,Normal
 74,PI074,40,4,152,55.7,24.1,150,100,117,9.1,122,Positif2,Preeklampsia
 76,PI076,39,3,150,57.2,25.4,113,70,84,10.1,81,Negatif,Normal
 77,PI077,36,3,147,72,33.3,128,80,96,12.1,108,Negatif,Normal
@@ -61,6 +64,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 81,PI081,29,2,146,52,24.4,95,70,78,13.1,105,Negatif,Normal
 82,PI082,28,1,155,75,31.2,103,73,83,13.1,99,Negatif,Normal
 84,PI084,17,0,155,60.5,25.2,145,74,98,9.5,86,Positif2,Preeklampsia
+85,PI085,32,0,155,97,40.4,148,64,92,12.1,112,Negatif,Normal
 86,PI086,40,4,159,60.7,24,130,98,109,12.1,84,Negatif,Normal
 87,PI087,24,1,165,101.5,37.3,135,89,104,12.1,110,Negatif,Normal
 88,PI088,25,1,155,54,22.5,124,72,89,9.1,80,Negatif,Normal
@@ -70,11 +74,13 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 92,PI092,22,0,158,90.8,36.4,127,82,97,14.1,92,Negatif,Normal
 93,PI093,32,2,157,57.3,23.2,176,80,112,11.1,83,Positif3,Preeklampsia
 94,PI094,34,2,155,55.7,23.2,116,82,93,11.3,99,Negatif,Normal
+96,PI096,32,1,149,75.6,34.1,119,82,94,12.4,122,Negatif,Normal
 95,PI095,33,3,157,52,21.1,97,56,70,11.1,118,Negatif,Normal
 97,PI097,37,3,150,61.3,27.2,133,80,98,10.1,101,Positif2,Preeklampsia
 98,PI098,21,0,150,55.8,24.8,100,65,77,11.1,85,Negatif,Normal
 99,PI099,27,0,160,66.9,26.1,99,85,90,10.1,97,Negatif,Normal
 101,PI101,33,2,155,59.1,24.6,116,66,83,11.1,99,Negatif,Normal
+102,PI102,27,1,156,59.6,24.5,106,72,83,11.1,123,Negatif,Normal
 103,PI103,41,2,159,62.5,24.7,124,59,81,8.1,80,Negatif,Normal
 104,PI104,33,0,160,52.6,20.5,118,73,88,13.1,89,Negatif,Normal
 105,PI105,33,1,155,54.7,22.8,128,76,93,12.1,104,Negatif,Normal
@@ -84,10 +90,17 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 109,PI109,26,0,160,72.6,28.4,134,86,102,12.1,83,Negatif,Normal
 110,PI110,24,0,142,41.6,20.6,112,72,85,10.1,114,Negatif,Normal
 111,PI111,27,0,156,64,26.3,141,83,102,8.1,104,Positif2,Preeklampsia
+113,PI113,31,1,156,67.5,27.7,106,74,85,11.7,130,Negatif,Normal
 114,PI114,37,2,163,62.2,23.4,116,78,91,12.9,102,Negatif,Normal
 115,PI115,25,2,149,84.4,38,140,90,107,11.6,144,Positif2,Preeklampsia
 116,PI116,26,1,160,59.4,23.2,120,82,95,12,78,Positif1,Normal
 117,PI117,35,3,151,55.9,24.5,100,60,73,11.9,98,Negatif,Normal
+119,PI119,22,1,161,76.6,29.6,117,75,89,13.1,137,Negatif,Normal
+120,PI120,28,0,156,61,25.1,155,85,108,11.1,114,Negatif,Normal
+121,PI121,35,3,156,77.9,32,113,85,94,12.1,126,Negatif,Normal
+122,PI122,28,1,156,56.6,23.3,109,65,80,9.1,136,Negatif,Normal
+123,PI123,32,1,141,44.4,22.3,136,94,108,12.3,137,Negatif,Normal
+124,PI124,23,0,162,61.9,23.6,118,79,92,10.1,112,Negatif,Normal
 125,PI125,35,2,145.5,57.6,27.2,102,56,71,12.1,91,Negatif,Normal
 126,PI126,24,1,155,70.6,29.4,117,77,90,11.1,97,Negatif,Normal
 127,PI127,36,3,155,66.3,27.6,113,67,82,10.1,96,Negatif,Normal
@@ -95,11 +108,17 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 129,PI129,42,3,154,56.3,23.7,127,80,96,10.5,96,Negatif,Normal
 130,PI130,22,1,161,76.6,29.6,117,75,89,10.1,106,Negatif,Normal
 131,PI131,27,2,148,71.5,32.6,112,90,97,13.1,85,Negatif,Normal
+132,PI132,33,0,158.9,54,21.4,127,81,96,11.1,131,Negatif,Normal
 133,PI133,32,0,155,52.7,21.9,100,66,77,9.1,95,Negatif,Normal
+134,PI134,25,0,156,85.9,35.3,138,95,109,11.1,125,Negatif,Normal
 135,PI135,29,1,158,83.2,33.3,109,85,93,12.3,128,Positif2,Preeklampsia
 136,PI136,24,1,154,71.5,30.1,129,86,100,11.1,112,Negatif,Normal
+137,PI137,26,2,160,49.3,19.3,89,67,74,12.1,122,Negatif,Normal
+138,PI138,22,2,156,76.7,31.5,109,73,85,10.1,127,Positif1,Normal
+139,PI139,27,0,158,87,34.9,130,80,97,10.1,138,Negatif,Normal
 141,PI141,34,4,147,60,27.8,108,63,78,10.1,94,Negatif,Normal
 142,PI142,22,1,158,64.3,25.8,132,97,109,9.6,91,Positif2,Preeklampsia
+143,PI143,32,1,150,56,24.9,130,76,94,9.1,138,Negatif,Normal
 144,PI144,29,1,155,84,35,136,83,101,13.1,97,Negatif,Normal
 146,PI146,39,2,148,69,31.5,110,73,85,10.1,94,Negatif,Normal
 147,PI147,27,2,148,71.5,32.6,112,90,97,12.3,91,Negatif,Normal
@@ -111,6 +130,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 154,PI154,40,3,152,53.6,23.2,126,89,101,11.2,94,Positif2,Preeklampsia
 155,PI155,34,1,154,41.3,17.4,120,80,93,12.6,81,Negatif,Normal
 156,PI156,26,1,160,59.4,23.2,120,82,95,11.1,102,Positif1,Normal
+157,PI157,31,1,154,69.3,29.2,129,83,98,10.9,133,Negatif,Normal
 158,PI158,23,1,151,52.8,23.2,111,77,88,11.8,90,Positif1,Normal
 159,PI159,26,1,151,59.9,26.3,120,82,95,10.1,119,Positif1,Normal
 160,PI160,37,4,155,67,27.9,160,100,120,10.1,140,Positif2,Preeklampsia
@@ -122,7 +142,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 166,PI166,38,3,157,60,24.3,118,81,93,12.1,107,Negatif,Normal
 167,PI167,29,2,145.5,59.7,28.2,124,72,89,12.1,101,Negatif,Normal
 168,PI168,36,4,152,68,29.4,139,95,110,11.3,99,Positif2,Preeklampsia
-169,PI169,25,1,165,77.6,28.5,129,91,104,11.9,171,Negatif,Normal
 170,PI170,23,1,146,85,39.9,105,66,79,9.1,126,Negatif,Normal
 171,PI171,30,1,154,62.2,26.2,110,78,89,9.1,132,Positif2,Preeklampsia
 172,PI172,21,0,153,54,23.1,96,60,72,12.1,82,Negatif,Normal
@@ -146,6 +165,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 192,PI192,23,2,148,54.9,25.1,130,108,115,10.1,114,Positif2,Preeklampsia
 193,PI193,31,3,155,66,27.5,120,79,93,11.1,116,Positif1,Normal
 194,PI194,23,0,155,83.6,34.8,107,84,92,11.1,99,Negatif,Normal
+195,PI195,36,4,150,73.6,32.7,116,69,85,11.5,127,Negatif,Normal
 197,PI197,33,1,150,56.9,25.3,94,56,69,12.1,96,Negatif,Normal
 198,PI198,23,0,155,54,22.5,112,78,89,10.1,90,Negatif,Normal
 200,PI200,26,1,156,47,19.3,105,86,92,12.8,110,Negatif,Normal
@@ -272,6 +292,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 325,PI325,38,3,150,57.2,25.4,113,70,84,11.1,126,Positif2,Preeklampsia
 327,PI327,37,3,154,58.2,24.5,123,82,96,10,97,Negatif,Normal
 328,PI328,24,1,151,60.5,26.5,104,71,82,11.1,105,Negatif,Normal
+329,PI329,25,0,162,63,24,150,83,105,12.1,139,Negatif,Normal
 330,PI330,33,4,161,64.7,25,99,72,81,12.1,87,Negatif,Normal
 331,PI331,24,0,154,67.2,28.3,112,87,95,10.8,77,Negatif,Normal
 332,PI332,19,0,156,39.4,16.2,94,57,69,11.1,133,Negatif,Normal
@@ -308,6 +329,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 364,PI364,29,3,157,59.7,24.2,94,73,80,10.1,102,Negatif,Normal
 365,PI365,31,1,155,60.3,25.1,136,94,108,10.1,101,Negatif,Normal
 366,PI366,25,0,160,51.5,20.1,129,72,91,13.9,109,Negatif,Normal
+367,PI367,38,2,158,95,38.1,125,70,88,11.1,136,Negatif,Normal
 368,PI368,26,1,145,53.2,25.3,97,62,74,9.6,84,Positif1,Normal
 369,PI369,27,0,160,61.2,23.9,158,87,111,13.1,126,Positif2,Preeklampsia
 370,PI370,30,1,160,59.5,23.2,133,80,98,13.1,110,Negatif,Normal
@@ -442,6 +464,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 508,PI508,33,2,154,56,23.6,112,76,88,9.1,100,Negatif,Normal
 509,PI509,22,0,150,47.4,21.1,101,72,82,11.1,91,Negatif,Normal
 510,PI510,33,2,160,68,26.6,111,75,87,13.1,114,Positif1,Normal
+511,PI511,29,1,155,75,31.2,115,83,94,11.6,135,Negatif,Normal
 512,PI512,23,2,154,58.5,24.7,143,121,128,10.1,99,Negatif,Normal
 514,PI514,21,0,159,46,18.2,110,70,83,12.1,102,Negatif,Normal
 515,PI515,23,0,155,71,29.6,123,90,101,13.1,130,Positif2,Preeklampsia
@@ -458,7 +481,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 526,PI526,24,0,153,55.5,23.7,125,77,93,12.1,98,Positif1,Normal
 527,PI527,43,1,160,72,28.1,93,71,78,14.1,113,Negatif,Normal
 528,PI528,31,4,148.9,52,23.5,100,70,80,11.1,105,Negatif,Normal
-529,PI529,27,1,160,83.8,32.7,122,93,103,11.8,163,Negatif,Normal
 530,PI530,19,0,155,65,27.1,111,63,79,9.9,123,Negatif,Normal
 531,PI531,35,2,168,67.3,23.8,110,77,88,9.6,88,Positif1,Normal
 532,PI532,24,2,155,45,18.7,99,68,78,10.9,131,Negatif,Normal
@@ -473,6 +495,7 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 542,PI542,29,1,155,75,31.2,136,88,104,8.1,81,Negatif,Normal
 543,PI543,30,1,165,73.7,27.1,152,120,131,10.1,129,Positif1,Preeklampsia
 544,PI544,33,3,158,83.8,33.6,116,77,90,11.1,90,Negatif,Normal
+545,PI545,41,1,146,59,27.7,145,81,102,12.1,122,Negatif,Normal
 546,PI546,38,1,141,62,31.2,113,10,44,12.1,89,Negatif,Normal
 547,PI547,26,0,158,71,28.4,105,69,81,9.1,97,Negatif,Normal
 549,PI549,28,1,155,53,22.1,108,71,83,12.1,107,Negatif,Normal
@@ -492,9 +515,11 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 565,PI565,33,1,148,60.6,27.7,103,61,75,8.1,117,Negatif,Normal
 566,PI566,31,1,159,110,43.5,117,76,90,13.1,90,Negatif,Normal
 567,PI567,21,2,159,68,26.9,131,78,96,9.7,93,Negatif,Normal
+568,PI568,41,2,149,55,24.8,148,89,109,11.1,122,Negatif,Normal
 569,PI569,35,4,161,69.7,26.9,116,78,91,10.1,99,Negatif,Normal
 570,PI570,27,0,156,52,21.4,109,68,82,10.1,99,Negatif,Normal
 571,PI571,28,1,159,82.2,32.5,114,72,86,11.1,100,Negatif,Normal
+572,PI572,33,3,158,84.1,33.7,120,83,95,11.1,139,Negatif,Normal
 573,PI573,25,1,155,66.8,27.8,119,81,94,9.1,103,Positif2,Preeklampsia
 574,PI574,23,0,151,54,23.7,104,64,77,10.5,103,Negatif,Normal
 575,PI575,30,2,153,58.1,24.8,94,61,72,10.6,91,Negatif,Normal
@@ -512,5 +537,5 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 594,PI594,33,1,166,77.9,28.3,113,94,100,12.7,144,Positif2,Preeklampsia
 596,PI596,25,0,155,89.4,37.2,145,92,110,11.2,206,Positif1,Preeklampsia
 597,PI597,29,0,156,51.9,21.3,144,92,109,11.5,90,Positif1,Preeklampsia
-598,PI598,25,1,159,90,35.6,142,108,119,11.9,87,Positif1,Preeklampsia
+598,PI598,25,1,159,90,35.6,140,94,109,11.9,87,Positif1,Preeklampsia
 600,PI600,34,2,153,93,39.7,162,106,125,12.8,101,Positif1,Preeklampsia

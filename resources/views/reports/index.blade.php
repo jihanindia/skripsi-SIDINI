@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Laporan - Preeklampsia CDSS')
+@section('title', 'Laporan - SIDINI')
 @section('page-title', 'Laporan & Statistik')
 @section('page-subtitle', 'Data screening pasien — cetak dan ekspor Excel')
 

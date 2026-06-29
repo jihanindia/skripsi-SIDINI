@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar - Preeklampsia CDSS')
+@section('title', 'Daftar - SIDINI')
 
 @section('content')
 <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
@@ -14,7 +14,7 @@
                 Daftar Akun Baru
             </h1>
             <p style="color: var(--color-gray-600); font-size: 0.95rem;">
-                Buat akun untuk mengakses Preeklampsia CDSS
+                Buat akun untuk mengakses SIDINI
             </p>
         </div>
 

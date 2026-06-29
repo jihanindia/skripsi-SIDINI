@@ -88,7 +88,7 @@ class TrainingDataController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($jsonData, $accuracy, $best_k) {
+            DB::transaction(function () use ($jsonData, $accuracy, $best_k, $parsedData) {
                 \App\Models\TrainingData::truncate();
 
                 $insertData = [];
@@ -117,12 +117,20 @@ class TrainingDataController extends Controller
                 }
 
                 file_put_contents(storage_path('app/knn_metadata.json'), json_encode([
-                    'accuracy' => $accuracy,
-                    'best_k' => $best_k,
-                    'confusion_matrix' => $parsedData['confusion_matrix'] ?? null,
-                    'classification_report' => $parsedData['classification_report'] ?? null,
-                    'trained_at' => now()->toDateTimeString(),
-                    'total_records' => count($insertData),
+                    'accuracy'                 => $accuracy,
+                    'best_k'                   => $best_k,
+                    'confusion_matrix'         => $parsedData['confusion_matrix'] ?? null,
+                    'confusion_matrix_labels'  => $parsedData['classification_report']
+                                                    ? array_values(array_keys(array_filter(
+                                                          $parsedData['classification_report'],
+                                                          fn($v, $k) => is_array($v) && isset($v['precision'])
+                                                                    && !str_contains(strtolower($k), 'avg'),
+                                                          ARRAY_FILTER_USE_BOTH
+                                                      )))
+                                                    : null,
+                    'classification_report'    => $parsedData['classification_report'] ?? null,
+                    'trained_at'               => now()->toDateTimeString(),
+                    'total_records'            => count($insertData),
                 ]));
             });
         } catch (\Throwable $e) {
