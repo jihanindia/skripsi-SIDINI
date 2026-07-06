@@ -20,25 +20,23 @@ class AuthController extends Controller
 
     /**
      * Handle login request
-     * Supports login with both username and email
+     * Supports login with email
      */
     public function login(Request $request)
     {
         $request->validate([
-            'login' => 'required|string',
+            'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
-        $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if (Auth::attempt([$loginField => $request->login, 'password' => $request->password], $request->remember)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $request->session()->regenerate();
 
             return redirect()->intended('/dashboard');
         }
 
         throw ValidationException::withMessages([
-            'login' => ['Username/Email atau password salah.'],
+            'email' => ['Email dan password salah. Silahkan masukkan kembali'],
         ]);
     }
 

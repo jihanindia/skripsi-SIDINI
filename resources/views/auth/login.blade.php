@@ -44,22 +44,22 @@
         <form method="POST" action="{{ route('login') }}" class="login-form">
             @csrf
 
-            <!-- Username/Email Input -->
+            <!-- Email Input -->
             <div class="input-group">
-                <label for="login" class="input-label">
+                <label for="email" class="input-label">
                     <svg class="label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    Username atau Email
+                    Email
                 </label>
                 <div class="input-wrapper">
                     <input 
-                        type="text" 
-                        id="login" 
-                        name="login" 
+                        type="email" 
+                        id="email" 
+                        name="email" 
                         class="modern-input" 
-                        placeholder="Masukkan username atau email"
-                        value="{{ old('login') }}"
+                        placeholder="Masukkan email"
+                        value="{{ old('email') }}"
                         required 
                         autofocus
                     >
@@ -109,7 +109,7 @@
                     <svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                     </svg>
-                    Masuk ke Sistem
+                    Login
                 </span>
                 <div class="button-shine"></div>
             </button>

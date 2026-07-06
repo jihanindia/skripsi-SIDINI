@@ -111,8 +111,8 @@ X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(
     y,
     df.index,
     test_size=0.20,
-    random_state=42,
-    stratify=y
+    random_state=42
+    # stratify=y
 )
 
 # =========================
@@ -140,7 +140,7 @@ preprocessor = ColumnTransformer(
 # =========================
 # 8. TUNING K
 # =========================
-k_values = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]
+k_values = [3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]
 
 best_k = 0
 best_cv_acc = 0
@@ -185,9 +185,10 @@ for k in k_values:
     # =========================
     # SIMPAN K TERBAIK
     # =========================
-    if cv_acc >= best_cv_acc:
+    if cv_acc > best_cv_acc:
         best_cv_acc = cv_acc
         best_k = k
+
 
 # =========================
 # 9. MODEL FINAL

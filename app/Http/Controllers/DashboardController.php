@@ -38,22 +38,81 @@ class DashboardController extends Controller
             $growthPercent = 100;
         }
 
-        $knnAccuracy = null;
-        $metadataPath = storage_path('app/knn_metadata.json');
-        if (file_exists($metadataPath)) {
-            $metadata = json_decode(file_get_contents($metadataPath), true);
-            $knnAccuracy = $metadata['accuracy'] ?? null;
+        $cvAccuracy = null;
+        $testAccuracy = null;
+        $metricsPath = storage_path('app/last_training_prediction_metrics.json');
+        if (file_exists($metricsPath)) {
+            $metrics = json_decode(file_get_contents($metricsPath), true);
+            $testAccuracy = isset($metrics['test_accuracy'])
+                ? round($metrics['test_accuracy'], 2)
+                : null;
+            $cvAccuracy = $testAccuracy;
         }
 
         $chart = $this->buildChartData($chartRange);
+
+        // Fetch Recent Assessments
+        $recentAssessments = Assessment::query()
+            ->forCurrentUser()
+            ->with(['patient', 'result'])
+            ->orderBy('assessment_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->take(2)
+            ->get();
+
+        // 7 Days Trend Logic
+        $trendLabels = [];
+        $trendNormal = [];
+        $trendPreeklampsia = [];
+        
+        $distNormal = 0;
+        $distPreeklampsia = 0;
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $dayMonth = $date->format('j M');
+            $trendLabels[] = $dayMonth;
+
+            // count Normal
+            $countNormal = Assessment::query()
+                ->forCurrentUser()
+                ->whereDate('assessment_date', $date->toDateString())
+                ->whereHas('result', function ($q) {
+                    $q->whereNotIn('risk_category', ['high_risk', 'severe_preeclampsia']);
+                })->count();
+            
+            // count Preeklampsia
+            $countPreeklampsia = Assessment::query()
+                ->forCurrentUser()
+                ->whereDate('assessment_date', $date->toDateString())
+                ->whereHas('result', function ($q) {
+                    $q->whereIn('risk_category', ['high_risk', 'severe_preeclampsia']);
+                })->count();
+
+            $trendNormal[] = $countNormal;
+            $trendPreeklampsia[] = $countPreeklampsia;
+            
+            $distNormal += $countNormal;
+            $distPreeklampsia += $countPreeklampsia;
+        }
+
+        $totalDist = $distNormal + $distPreeklampsia;
 
         return view('dashboard', compact(
             'totalAssessments',
             'totalPatients',
             'highRiskCount',
             'growthPercent',
-            'knnAccuracy',
+            'cvAccuracy',
+            'testAccuracy',
             'chartRange',
+            'recentAssessments',
+            'trendLabels',
+            'trendNormal',
+            'trendPreeklampsia',
+            'distNormal',
+            'distPreeklampsia',
+            'totalDist'
         ) + $chart);
     }
 

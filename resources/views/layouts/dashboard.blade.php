@@ -86,7 +86,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
                         </div>
-                        <span>Prediksi Data Latih</span>
+                        <span>Prediksi Data Training</span>
                     </a>
                     <a href="{{ route('predictions.test.index') }}" class="submenu-item {{ request()->routeIs('predictions.test.*') ? 'active' : '' }}">
                         <div class="submenu-icon-wrap">
@@ -94,7 +94,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path>
                             </svg>
                         </div>
-                        <span>Prediksi Data Uji</span>
+                        <span>Prediksi Data Testing</span>
                     </a>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                     <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                     </svg>
-                    Keluar
+                    Logout
                 </button>
             </form>
         </div>

@@ -497,7 +497,7 @@
             <table class="pred-table" id="predTable">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>No</th>
                         @if(isset($result['predictions'][0]['nama'])) <th>Nama</th> @endif
                         <th>Usia</th>
                         <th>Paritas</th>

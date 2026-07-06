@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Laporan - SIDINI')
-@section('page-title', 'Laporan & Statistik')
+@section('page-title', 'Laporan Deteksi Dini Preeklampsia')
 @section('page-subtitle', 'Data screening pasien — cetak dan ekspor Excel')
 
 @section('content')
@@ -29,7 +29,7 @@
     </div>
 
     <div class="stat-card">
-        <label class="form-label" style="margin-bottom: 0.5rem;">Hasil KNN</label>
+        <label class="form-label" style="margin-bottom: 0.5rem;">Kategori</label>
         <select class="form-input" name="risk" style="margin: 0;">
             <option value="all" {{ $risk === 'all' ? 'selected' : '' }}>Semua</option>
             <option value="normal" {{ $risk === 'normal' ? 'selected' : '' }}>Normal</option>

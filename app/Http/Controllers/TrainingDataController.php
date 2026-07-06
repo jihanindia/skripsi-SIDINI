@@ -80,6 +80,8 @@ class TrainingDataController extends Controller
         }
 
         $accuracy = $parsedData['test_accuracy'] ?? $parsedData['cv_accuracy'] ?? $parsedData['accuracy'] ?? 0;
+        $cvAccuracy = $parsedData['cv_accuracy'] ?? $accuracy;
+        $testAccuracy = $parsedData['test_accuracy'] ?? $accuracy;
         $best_k = $parsedData['best_k'] ?? 0;
         $jsonData = $parsedData['data'] ?? [];
 
@@ -88,7 +90,7 @@ class TrainingDataController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($jsonData, $accuracy, $best_k, $parsedData) {
+            DB::transaction(function () use ($jsonData, $accuracy, $cvAccuracy, $testAccuracy, $best_k, $parsedData) {
                 \App\Models\TrainingData::truncate();
 
                 $insertData = [];
@@ -118,6 +120,8 @@ class TrainingDataController extends Controller
 
                 file_put_contents(storage_path('app/knn_metadata.json'), json_encode([
                     'accuracy'                 => $accuracy,
+                    'cv_accuracy'              => $cvAccuracy,
+                    'test_accuracy'            => $testAccuracy,
                     'best_k'                   => $best_k,
                     'confusion_matrix'         => $parsedData['confusion_matrix'] ?? null,
                     'confusion_matrix_labels'  => $parsedData['classification_report']
@@ -145,7 +149,8 @@ class TrainingDataController extends Controller
 
         return redirect()->back()->with([
             'success' => 'Model KNN berhasil dilatih dan ' . count($jsonData) . ' data tersimpan ke database.',
-            'accuracy' => $accuracy,
+            'cv_accuracy' => $cvAccuracy,
+            'test_accuracy' => $testAccuracy,
             'best_k' => $best_k,
         ]);
     }

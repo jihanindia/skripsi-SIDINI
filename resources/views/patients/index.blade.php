@@ -167,161 +167,42 @@
 
 {{-- ======== MODAL DETAIL ======== --}}
 <div id="modalPatientDetail" class="patient-modal-overlay" style="display: none;" aria-hidden="true">
-    <div class="patient-modal-box">
+    <div class="patient-modal-box" style="max-width: 600px;">
         <div class="patient-modal-header">
-            <h2>🔍 Detail Screening Pasien & Akurasi Model</h2>
+            <h2>🔍 Detail Screening Pasien</h2>
             <button type="button" id="btnCloseDetailModal" class="modal-close-btn">&times;</button>
         </div>
-        <div class="patient-modal-grid">
-            {{-- Kolom Kiri --}}
-            <div class="patient-modal-col">
-                <div class="modal-section-box">
-                    <h3 class="modal-section-title">👤 Profil Pasien</h3>
-                    <div class="modal-info-grid2">
-                        <div><span class="info-label">Nama Pasien</span><strong id="detName">-</strong></div>
-                        <div><span class="info-label">Tanggal Penilaian</span><strong id="detDate">-</strong></div>
-                        <div><span class="info-label">Usia</span><span id="detAge">-</span> Tahun</div>
-                        <div><span class="info-label">Paritas</span><span id="detPara">-</span></div>
-                    </div>
-                </div>
-                <div class="modal-section-box">
-                    <h3 class="modal-section-title">🩺 Tanda Vital & Lab</h3>
-                    <div class="modal-info-grid3">
-                        <div><span class="info-label">Tekanan Darah</span><strong id="detBP">-</strong> mmHg</div>
-                        <div><span class="info-label">MAP</span><strong id="detMAP">-</strong> mmHg</div>
-                        <div><span class="info-label">Protein Urin</span><strong id="detProtein">-</strong></div>
-                        <div><span class="info-label">Berat Badan</span><span id="detWeight">-</span> kg</div>
-                        <div><span class="info-label">Tinggi Badan</span><span id="detHeight">-</span> cm</div>
-                        <div><span class="info-label">IMT</span><span id="detBMI">-</span></div>
-                        <div style="grid-column: span 3;"><span class="info-label">GDS</span><span id="detGDS">-</span> mg/dL</div>
-                    </div>
-                </div>
-                <div class="modal-section-box">
-                    <h3 class="modal-section-title">💡 Hasil & Rekomendasi</h3>
-                    <div style="margin-bottom: 0.75rem;">
-                        <span class="info-label">Hasil Diagnosis KNN</span>
-                        <span id="detResultBadge" class="risk-badge" style="padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: 700;">-</span>
-                    </div>
-                    <div>
-                        <span class="info-label">Rekomendasi Medis</span>
-                        <ul id="detRecommendations" style="margin: 0.25rem 0 0; padding-left: 1.25rem; font-size: 0.85rem; color: var(--color-gray-700); line-height: 1.6;"></ul>
-                    </div>
+        <div class="patient-modal-col">
+            <div class="modal-section-box">
+                <h3 class="modal-section-title">👤 Profil Pasien</h3>
+                <div class="modal-info-grid2">
+                    <div><span class="info-label">Nama Pasien</span><strong id="detName">-</strong></div>
+                    <div><span class="info-label">Tanggal Penilaian</span><strong id="detDate">-</strong></div>
+                    <div><span class="info-label">Usia</span><span id="detAge">-</span> Tahun</div>
+                    <div><span class="info-label">Paritas</span><span id="detPara">-</span></div>
                 </div>
             </div>
-
-            {{-- Kolom Kanan - Model & Confusion Matrix --}}
-            <div class="patient-modal-col">
-                @php
-                    $hasCM = !empty($metadata) && !empty($metadata['confusion_matrix']) && is_array($metadata['confusion_matrix']);
-
-                    // Identifikasi posisi label secara dinamis
-                    $cmLabels   = $metadata['confusion_matrix_labels'] ?? null;
-
-                    // Jika labels tersedia, cari indeks Normal vs Preeklampsia
-                    $normalIdx = 0; $preIdx = 1;  // default asumsi
-                    if ($cmLabels) {
-                        foreach ($cmLabels as $i => $lbl) {
-                            $lowerLbl = strtolower($lbl);
-                            if (str_contains($lowerLbl, 'avg') || str_contains($lowerLbl, 'accuracy')) {
-                                continue;
-                            }
-                            if (str_contains($lowerLbl, 'pre')) {
-                                $preIdx   = $i;
-                            } else {
-                                $normalIdx = $i;
-                            }
-                        }
-                    }
-
-                    $tn2  = $hasCM ? ($metadata['confusion_matrix'][$normalIdx][$normalIdx] ?? 0) : null;
-                    $fp2  = $hasCM ? ($metadata['confusion_matrix'][$normalIdx][$preIdx]    ?? 0) : null;
-                    $fn2  = $hasCM ? ($metadata['confusion_matrix'][$preIdx][$normalIdx]    ?? 0) : null;
-                    $tp2  = $hasCM ? ($metadata['confusion_matrix'][$preIdx][$preIdx]       ?? 0) : null;
-                    $sens = ($hasCM && ($tp2 + $fn2) > 0) ? round($tp2 / ($tp2 + $fn2) * 100, 1) : null;
-                    $spec = ($hasCM && ($tn2 + $fp2) > 0) ? round($tn2 / ($tn2 + $fp2) * 100, 1) : null;
-                    $prec = ($hasCM && ($tp2 + $fp2) > 0) ? round($tp2 / ($tp2 + $fp2) * 100, 1) : null;
-                @endphp
-                <div class="modal-section-box">
-                    <h3 class="modal-section-title">🤖 Performa Model KNN</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
-                        <div class="knn-metric-card">
-                            <span class="info-label">Akurasi Model</span>
-                            <strong style="font-size: 1.5rem; color: var(--color-medical-primary);">
-                                {{ isset($metadata['accuracy']) ? $metadata['accuracy'].'%' : '--' }}
-                            </strong>
-                        </div>
-                        <div class="knn-metric-card">
-                            <span class="info-label">Nilai K (Tetangga)</span>
-                            <strong style="font-size: 1.5rem; color: var(--color-medical-warning);">
-                                {{ $metadata['best_k'] ?? '--' }}
-                            </strong>
-                        </div>
-                    </div>
-                    @if($hasCM)
-                    <div style="font-size: 0.85rem; color: var(--color-gray-700);">
-                        <div class="metric-row"><span>Sensitivitas (Recall Preeklampsia):</span><strong>{{ $sens !== null ? $sens.'%' : '--' }}</strong></div>
-                        <div class="metric-row"><span>Spesifisitas (Recall Normal):</span><strong>{{ $spec !== null ? $spec.'%' : '--' }}</strong></div>
-                        <div class="metric-row"><span>Presisi (Ketepatan Prediksi):</span><strong>{{ $prec !== null ? $prec.'%' : '--' }}</strong></div>
-                        <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--color-gray-500);margin-top:0.75rem;">
-                            <span>Terakhir Dilatih:</span><span>{{ $metadata['trained_at'] ?? '-' }}</span>
-                        </div>
-                    </div>
-                    @else
-                    <div style="text-align:center;padding:1rem;color:var(--color-gray-400);font-size:0.85rem;">
-                        @if(!empty($metadata))
-                            Data model tersedia namun confusion matrix belum terbaca.<br>
-                            <span style="font-size:0.78rem;">Silakan latih ulang model di menu <strong>Training</strong>.</span>
-                        @else
-                            Belum ada data pelatihan model.<br>Upload dataset CSV di menu Training.
-                        @endif
-                    </div>
-                    @endif
+            <div class="modal-section-box">
+                <h3 class="modal-section-title">🩺 Tanda Vital & Lab</h3>
+                <div class="modal-info-grid3">
+                    <div><span class="info-label">Tekanan Darah</span><strong id="detBP">-</strong> mmHg</div>
+                    <div><span class="info-label">MAP</span><strong id="detMAP">-</strong> mmHg</div>
+                    <div><span class="info-label">Protein Urin</span><strong id="detProtein">-</strong></div>
+                    <div><span class="info-label">Berat Badan</span><span id="detWeight">-</span> kg</div>
+                    <div><span class="info-label">Tinggi Badan</span><span id="detHeight">-</span> cm</div>
+                    <div><span class="info-label">IMT</span><span id="detBMI">-</span></div>
+                    <div style="grid-column: span 3;"><span class="info-label">GDS</span><span id="detGDS">-</span> mg/dL</div>
                 </div>
-
-                <div class="modal-section-box">
-                    <h3 class="modal-section-title">📊 Visualisasi Confusion Matrix</h3>
-                    @if($hasCM)
-                    <div style="overflow-x: auto;">
-                        <table class="cm-table">
-                            <thead>
-                                <tr>
-                                    <th colspan="2" style="background:transparent;border:none;"></th>
-                                    <th colspan="2" style="background:var(--color-gray-300);color:var(--color-gray-800);padding:0.4rem;font-size:0.75rem;text-transform:uppercase;border:none;">Prediksi Model</th>
-                                </tr>
-                                <tr>
-                                    <th colspan="2" style="background:transparent;border:none;"></th>
-                                    <th style="background:var(--color-gray-200);color:var(--color-gray-700);padding:0.5rem;border:none;width:40%;">Normal</th>
-                                    <th style="background:var(--color-gray-200);color:var(--color-gray-700);padding:0.5rem;border:none;width:40%;">Preeklampsia</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td rowspan="2" class="cm-axis-label">Aktual</td>
-                                    <td style="background:var(--color-gray-200);color:var(--color-gray-700);font-weight:600;padding:0.5rem;border:none;white-space:nowrap;">Normal</td>
-                                    <td class="cm-cell cm-tn">{{ $tn2 }}<div class="cm-cell-label">True Negative (TN)</div></td>
-                                    <td class="cm-cell cm-fp">{{ $fp2 }}<div class="cm-cell-label">False Positive (FP)</div></td>
-                                </tr>
-                                <tr>
-                                    <td style="background:var(--color-gray-200);color:var(--color-gray-700);font-weight:600;padding:0.5rem;border:none;white-space:nowrap;">Preeklampsia</td>
-                                    <td class="cm-cell cm-fn">{{ $fn2 }}<div class="cm-cell-label">False Negative (FN)</div></td>
-                                    <td class="cm-cell cm-tp">{{ $tp2 }}<div class="cm-cell-label">True Positive (TP)</div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p style="margin-top:0.6rem;font-size:0.7rem;color:var(--color-gray-500);text-align:center;">
-                        Grid hijau = prediksi benar &nbsp;|&nbsp; Grid merah/oranye = kesalahan prediksi
-                    </p>
-                    @else
-                    <div style="text-align:center;padding:1rem;color:var(--color-gray-400);font-size:0.85rem;">
-                        @if(!empty($metadata))
-                            Confusion Matrix belum tersedia.<br>
-                            <span style="font-size:0.78rem;">Latih ulang model di menu <strong>Training</strong> untuk memperbarui data ini.</span>
-                        @else
-                            Confusion Matrix belum tersedia.<br>Upload dataset dan latih model terlebih dahulu.
-                        @endif
-                    </div>
-                    @endif
+            </div>
+            <div class="modal-section-box">
+                <h3 class="modal-section-title">💡 Hasil & Rekomendasi</h3>
+                <div style="margin-bottom: 0.75rem;">
+                    <span class="info-label">Hasil Diagnosis KNN</span>
+                    <span id="detResultBadge" class="risk-badge" style="padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: 700;">-</span>
+                </div>
+                <div>
+                    <span class="info-label">Rekomendasi Medis</span>
+                    <ul id="detRecommendations" style="margin: 0.25rem 0 0; padding-left: 1.25rem; font-size: 0.85rem; color: var(--color-gray-700); line-height: 1.6;"></ul>
                 </div>
             </div>
         </div>
@@ -330,6 +211,7 @@
         </div>
     </div>
 </div>
+
 
 {{-- ======== MODAL EDIT ======== --}}
 <div id="modalEditPatient" class="patient-modal-overlay" style="display: none;" aria-hidden="true">

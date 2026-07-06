@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Data Training - SIDINI')
-@section('page-title', 'Data Training KNN')
-@section('page-subtitle', 'Manajemen dataset untuk algoritma K-Nearest Neighbors')
+@section('page-title', 'Optimasi Nilai K')
+@section('page-subtitle', 'Pencarian Nilai K Optimal')
 
 @section('content')
 <!-- Info Alert -->
@@ -40,11 +40,18 @@
     </div>
     
     <div class="stat-card">
-        <p class="stat-label">Akurasi Model</p>
+        <p class="stat-label">Akurasi Cross-Validation</p>
         <p class="stat-value" style="color: var(--color-medical-info);">
-            {{ session('accuracy') ?? $metadata['accuracy'] ?? '--' }}%
+            {{ session('cv_accuracy') ?? $metadata['cv_accuracy'] ?? $metadata['accuracy'] ?? '--' }}%
         </p>
     </div>
+
+    <!-- <div class="stat-card">
+        <p class="stat-label">Akurasi Pengujian (Test)</p>
+        <p class="stat-value" style="color: #6366f1;">
+            {{ session('test_accuracy') ?? $metadata['test_accuracy'] ?? $metadata['accuracy'] ?? '--' }}%
+        </p>
+    </div> -->
     
     <div class="stat-card">
         <p class="stat-label">K Value</p>

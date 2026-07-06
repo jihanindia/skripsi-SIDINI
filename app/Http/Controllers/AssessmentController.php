@@ -51,27 +51,26 @@ class AssessmentController extends Controller
         $predictionLabel = $prediction === 'preeklampsia' ? 'Preeklampsia' : 'Normal';
 
         $assessment = Assessment::create([
-            'patient_id' => $patient->id,
-            'user_id' => auth()->id(),
-            'puskesmas' => auth()->user()->puskesmas,
-            'gravida' => (int) $validated['paritas'],
-            'para' => (int) $validated['paritas'],
-            'gestational_age' => 0,
-            'systolic_bp' => (int) $validated['systolic_bp'],
-            'diastolic_bp' => (int) $validated['diastolic_bp'],
-            'beratbadan' => $validated['beratbadan'],
-            'tinggibadan' => (int) $validated['tinggibadan'],
-            'imt' => $validated['imt'],
-            'protein_urine' => $this->mapProteinUrine($validated['protein_urine']),
-            'map' => $map,
-            'gds' => $validated['gds'] ?? null,
-            'assessment_date' => $validated['assessment_date'],
+            'patient_id'       => $patient->id,
+            'user_id'          => auth()->id(),
+            'puskesmas'        => auth()->user()->puskesmas,
+            'para'             => (int) $validated['paritas'],
+            'systolic_bp'      => (int) $validated['systolic_bp'],
+            'diastolic_bp'     => (int) $validated['diastolic_bp'],
+            'beratbadan'       => $validated['beratbadan'],
+            'tinggibadan'      => (int) $validated['tinggibadan'],
+            'imt'              => $validated['imt'],
+            'protein_urine'    => $this->mapProteinUrine($validated['protein_urine']),
+            'map'              => $map,
+            'gds'              => $validated['gds'] ?? null,
+            'prediction_result'=> $predictionLabel,
+            'assessment_date'  => $validated['assessment_date'],
         ]);
 
         $assessment->result()->create([
             'risk_category' => $prediction === 'preeklampsia' ? 'high_risk' : 'no_risk',
             'risk_score' => 100,
-            'k_value' => 5,
+            'k_value' => 3,
             'severity_level' => $prediction === 'preeklampsia' ? 'moderate' : 'none',
             'supporting_indicators' => [],
             'knn_neighbors' => [],
@@ -127,17 +126,17 @@ class AssessmentController extends Controller
 
         // Update assessment
         $assessment->update([
-            'gravida'      => (int) $validated['paritas'],
-            'para'         => (int) $validated['paritas'],
-            'systolic_bp'  => (int) $validated['systolic_bp'],
-            'diastolic_bp' => (int) $validated['diastolic_bp'],
-            'beratbadan'   => $validated['beratbadan'],
-            'tinggibadan'  => (int) $validated['tinggibadan'],
-            'imt'          => $validated['imt'],
-            'protein_urine'=> $this->mapProteinUrine($validated['protein_urine']),
-            'map'          => $map,
-            'gds'          => $validated['gds'] ?? null,
-            'assessment_date' => $validated['assessment_date'],
+            'para'             => (int) $validated['paritas'],
+            'systolic_bp'      => (int) $validated['systolic_bp'],
+            'diastolic_bp'     => (int) $validated['diastolic_bp'],
+            'beratbadan'       => $validated['beratbadan'],
+            'tinggibadan'      => (int) $validated['tinggibadan'],
+            'imt'              => $validated['imt'],
+            'protein_urine'    => $this->mapProteinUrine($validated['protein_urine']),
+            'map'              => $map,
+            'gds'              => $validated['gds'] ?? null,
+            'prediction_result'=> $predictionLabel,
+            'assessment_date'  => $validated['assessment_date'],
         ]);
 
         // Update patient age

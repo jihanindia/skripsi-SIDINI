@@ -20,7 +20,6 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 27,PI027,36,4,152,63.8,27.6,124,85,98,10.1,101,Negatif,Normal
 28,PI028,37,2,158,62.1,24.9,134,78,97,12.2,88,Negatif,Normal
 29,PI029,26,1,163,80,30.1,115,72,86,11.1,187,Positif2,Preeklampsia
-30,PI030,27,1,156,56.4,23.2,105,80,88,10,96,Negatif,Normal
 31,PI031,22,1,161,88.6,34.2,120,78,92,13.1,84,Negatif,Normal
 33,PI033,30,0,150,45.2,20.1,102,62,75,9.1,108,Negatif,Normal
 34,PI034,25,0,160,61.2,23.9,111,71,84,12.1,104,Negatif,Normal
@@ -537,5 +536,5 @@ no,nama,usia,paritas,tb,bb,imt,sistolik,diastolik,map,hb,gds,protein_urin,status
 594,PI594,33,1,166,77.9,28.3,113,94,100,12.7,144,Positif2,Preeklampsia
 596,PI596,25,0,155,89.4,37.2,145,92,110,11.2,206,Positif1,Preeklampsia
 597,PI597,29,0,156,51.9,21.3,144,92,109,11.5,90,Positif1,Preeklampsia
-598,PI598,25,1,159,90,35.6,140,94,109,11.9,87,Positif1,Preeklampsia
+598,PI598,25,1,159,90,35.6,142,108,119,11.9,87,Positif1,Preeklampsia
 600,PI600,34,2,153,93,39.7,162,106,125,12.8,101,Positif1,Preeklampsia
