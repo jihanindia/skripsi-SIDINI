@@ -133,6 +133,8 @@ class TrainingDataController extends Controller
                                                       )))
                                                     : null,
                     'classification_report'    => $parsedData['classification_report'] ?? null,
+                    'k_results'                => $parsedData['k_results'] ?? null,
+                    'roc_curve'                => $parsedData['roc_curve'] ?? null,
                     'trained_at'               => now()->toDateTimeString(),
                     'total_records'            => count($insertData),
                 ]));

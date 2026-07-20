@@ -2,7 +2,7 @@
 
 @section('title', 'Hasil Prediksi Data Training - SIDINI')
 @section('page-title', 'Hasil Prediksi Data Training')
-@section('page-subtitle', 'Hasil prediksi KNN untuk file: {{ $trainingFileName ?? "-" }}')
+
 
 @section('content')
 

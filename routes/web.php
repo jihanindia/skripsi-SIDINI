@@ -23,21 +23,26 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Data pasien — dinas lihat semua, puskesmas lihat puskesmas sendiri
-    Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
+    // Data pasien — dinas & puskesmas dapat melihat (dinas semua, puskesmas puskesmas sendiri)
+    Route::middleware('role:dinas,puskesmas')->group(function () {
+        Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
+    });
 
-    // Dinas Kesehatan Kota Bogor — laporan kasus preeklampsia
+    // Puskesmas — skrining pasien
+    Route::middleware('role:puskesmas')->group(function () {
+        Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
+        Route::post('/assessments/create', [AssessmentController::class, 'store'])->name('assessments.store');
+        Route::put('/assessments/{assessment}', [AssessmentController::class, 'update'])->name('assessments.update');
+    });
+
+    // Dinas Kesehatan — laporan kasus preeklampsia
     Route::middleware('role:dinas')->group(function () {
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
     });
 
-    // Puskesmas — penilaian & training KNN
-    Route::middleware('role:puskesmas')->group(function () {
-        Route::get('/assessments/create', [AssessmentController::class, 'create'])->name('assessments.create');
-        Route::post('/assessments/create', [AssessmentController::class, 'store'])->name('assessments.store');
-        Route::put('/assessments/{assessment}', [AssessmentController::class, 'update'])->name('assessments.update');
-
+    // Admin — tuning KNN & prediksi data
+    Route::middleware('role:admin')->group(function () {
         Route::get('/training-data', [TrainingDataController::class, 'index'])->name('training-data.index');
         Route::post('/training-data/train', [TrainingDataController::class, 'train'])->name('training-data.train');
 

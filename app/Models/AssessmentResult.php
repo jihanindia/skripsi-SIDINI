@@ -77,4 +77,29 @@ class AssessmentResult extends Model
             default => 'gray',
         };
     }
+
+    /**
+     * Get recommendations array with dynamic text replacement
+     */
+    public function getRecommendationsAttribute($value)
+    {
+        $recs = $this->castAttribute('recommendations', $value);
+        if (is_array($recs)) {
+            // Replace old preeclampsia recommendation
+            $recs = array_map(function($rec) {
+                return $rec === 'Segera konsultasi dokter spesialis obstetri'
+                    ? 'Segera rujuk pasien ke rumah sakit'
+                    : $rec;
+            }, $recs);
+
+            // Add check for normal but high blood pressure (systolic > 140 or diastolic > 90)
+            if ($this->risk_category === 'no_risk' && !in_array('Cek tekanan darah secara berkala', $recs, true)) {
+                $assessment = $this->assessment;
+                if ($assessment && ($assessment->systolic_bp > 140 || $assessment->diastolic_bp > 90)) {
+                    $recs[] = 'Cek tekanan darah secara berkala';
+                }
+            }
+        }
+        return $recs;
+    }
 }

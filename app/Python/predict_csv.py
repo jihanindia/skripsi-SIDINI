@@ -46,12 +46,9 @@ def predict_csv():
         print(json.dumps({"error": "Dataset training tidak memiliki kolom 'status'."}))
         sys.exit(1)
 
-    # Hitung MAP jika belum ada
-    if 'map' not in df_train.columns:
-        df_train['map'] = ((2 * df_train['diastolik']) + df_train['sistolik']) / 3
-
-    # Cek kolom fitur tersedia
-    missing_cols = [c for c in features if c not in df_train.columns]
+    # Cek kolom fitur
+    base_features = ["usia", "paritas", "tb", "bb", "imt", "sistolik", "diastolik", "map", "gds", "protein_urin"]
+    missing_cols = [c for c in base_features if c not in df_train.columns]
     if missing_cols:
         print(json.dumps({"error": f"Kolom tidak ditemukan di training: {missing_cols}"}))
         sys.exit(1)
@@ -60,7 +57,7 @@ def predict_csv():
     y_train_full = df_train['status']
 
     # =========================================
-    # 2. LOAD FILE UJI (tanpa label)
+    # 2. LOAD FILE UJI
     # =========================================
     try:
         df_test = pd.read_csv(test_path, sep=None, engine='python')
@@ -72,14 +69,12 @@ def predict_csv():
     # Normalisasi kolom file uji
     df_test = df_test.rename(columns=column_mapping)
 
-    # Hitung MAP jika belum ada di file uji
-    if 'map' not in df_test.columns:
-        if 'sistolik' in df_test.columns and 'diastolik' in df_test.columns:
-            df_test['map'] = ((2 * pd.to_numeric(df_test['diastolik'], errors='coerce')) +
-                               pd.to_numeric(df_test['sistolik'], errors='coerce')) / 3
-        else:
-            print(json.dumps({"error": "Kolom sistolik/diastolik tidak ditemukan untuk menghitung MAP."}))
-            sys.exit(1)
+    # Cek kolom fitur
+    base_features = ["usia", "paritas", "tb", "bb", "imt", "sistolik", "diastolik", "map", "gds", "protein_urin"]
+    missing_test_cols = [c for c in base_features if c not in df_test.columns]
+    if missing_test_cols:
+        print(json.dumps({"error": f"Kolom tidak ditemukan di file uji: {missing_test_cols}"}))
+        sys.exit(1)
 
     # Cek apakah file uji punya label (untuk confusion matrix)
     has_label = 'status' in df_test.columns
@@ -92,11 +87,6 @@ def predict_csv():
 
     df_test_clean = df_test_clean.dropna(subset=features).reset_index(drop=True)
 
-    missing_test_cols = [c for c in features if c not in df_test_clean.columns]
-    if missing_test_cols:
-        print(json.dumps({"error": f"Kolom tidak ditemukan di file uji: {missing_test_cols}"}))
-        sys.exit(1)
-
     X_test_data = df_test_clean[features].copy()
 
     # =========================================
@@ -108,8 +98,8 @@ def predict_csv():
 
     preprocessor = ColumnTransformer(
         transformers=[
-            ('num', MinMaxScaler(),                           numerical_features),
-            ('cat', OneHotEncoder(handle_unknown='ignore'),   categorical_features),
+            ('num', MinMaxScaler(), numerical_features),
+            ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features),
         ]
     )
 

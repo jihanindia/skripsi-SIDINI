@@ -2,7 +2,7 @@
 
 @section('title', 'Hasil Prediksi Data Testing - SIDINI')
 @section('page-title', 'Hasil Prediksi Data Testing')
-@section('page-subtitle', 'Hasil prediksi KNN untuk file: {{ $testFileName ?? "-" }}')
+
 
 @section('content')
 
@@ -206,22 +206,22 @@
         <p class="stat-desc">KNN Neighbors</p>
     </div>
 
-    @if($result['has_label'] && $result['test_accuracy'] !== null)
+    <!-- @if($result['has_label'] && $result['test_accuracy'] !== null)
     <div class="result-stat-card" style="border-top-color:#0891b2;">
         <p class="stat-desc">Akurasi</p>
         <p class="stat-number" style="color:#0891b2;">{{ number_format($result['test_accuracy'], 1) }}%</p>
         <p class="stat-desc">Data Uji Berlabel</p>
     </div>
-    @endif
+    @endif -->
 </div>
 
 <!-- ===== TABS ===== -->
 <div class="tab-buttons">
     <button class="tab-btn active" onclick="switchTab('tab-dist')">📊 Distribusi Prediksi</button>
-    @if($result['has_label'] && $result['confusion_matrix'])
+    <!-- @if($result['has_label'] && $result['confusion_matrix'])
     <button class="tab-btn" onclick="switchTab('tab-cm')">🔢 Confusion Matrix</button>
     <button class="tab-btn" onclick="switchTab('tab-report')">📈 Classification Report</button>
-    @endif
+    @endif -->
     <button class="tab-btn" onclick="switchTab('tab-data')">📋 Data Hasil Prediksi</button>
 </div>
 

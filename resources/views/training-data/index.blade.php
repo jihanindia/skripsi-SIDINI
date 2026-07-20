@@ -388,5 +388,212 @@
 </div>
 @endif
 
+<!-- START CHART SECTION -->
+@if(isset($metadata['k_results']) || isset($metadata['roc_curve']) || (isset($trainingData) && $trainingData->count() > 0))
+<div class="medical-card fade-in" style="margin-top: 2rem; animation-delay: 0.3s;">
+    <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-gray-800); margin: 0 0 1.5rem 0;">
+        📈 Visualisasi Hasil Model KNN
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(45%, 1fr)); gap: 2rem;">
+        {{-- Chart K-Results --}}
+        <div style="background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <p style="font-weight: 700; color: var(--color-gray-700); margin: 0 0 1rem 0; font-size: 0.95rem; text-align: center;">Akurasi CV Model K-NN dengan Variasi Nilai K</p>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="kChart"></canvas>
+            </div>
+        </div>
+
+        {{-- Bar Chart Evaluasi --}}
+        <div style="background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <p style="font-weight: 700; color: var(--color-gray-700); margin: 0 0 1rem 0; font-size: 0.95rem; text-align: center;">Evaluasi Kinerja Model K-NN</p>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="evalChart"></canvas>
+            </div>
+        </div>
+
+        {{-- ROC Curve --}}
+        <div style="background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <p style="font-weight: 700; color: var(--color-gray-700); margin: 0 0 1rem 0; font-size: 0.95rem; text-align: center;">ROC Curve Algoritma K-NN</p>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="rocChart"></canvas>
+            </div>
+        </div>
+
+        {{-- Scatter Plot --}}
+        <div style="background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <p style="font-weight: 700; color: var(--color-gray-700); margin: 0 0 1rem 0; font-size: 0.95rem; text-align: center;">Scatter Plot (Sistolik vs Diastolik)</p>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="scatterChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    @if(isset($metadata['k_results']))
+        const kLabels = @json(array_column($metadata['k_results'], 'k'));
+        const kData = @json(array_column($metadata['k_results'], 'cv_accuracy'));
+        
+        const kCtx = document.getElementById('kChart').getContext('2d');
+        new Chart(kCtx, {
+            type: 'line',
+            data: {
+                labels: kLabels,
+                datasets: [{
+                    label: 'Akurasi CV (%)',
+                    data: kData,
+                    borderColor: '#1f77b4',
+                    backgroundColor: '#1f77b4',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    fill: false,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Nilai K' } },
+                    y: { title: { display: true, text: 'Akurasi CV (%)' } }
+                }
+            }
+        });
+    @endif
+
+    @if(isset($metadata['classification_report']['macro avg']))
+        const evalCtx = document.getElementById('evalChart').getContext('2d');
+        const evalData = [
+            {{ round(($metadata['classification_report']['macro avg']['precision'] ?? 0) * 100, 1) }},
+            {{ round(($metadata['classification_report']['macro avg']['recall'] ?? 0) * 100, 1) }},
+            {{ round(($metadata['classification_report']['macro avg']['f1-score'] ?? 0) * 100, 1) }}
+        ];
+        new Chart(evalCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Precision', 'Recall', 'F1-Score'],
+                datasets: [{
+                    label: 'Persentase (%)',
+                    data: evalData,
+                    backgroundColor: '#1f77b4',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { min: 0, max: 100, title: { display: true, text: 'Persentase (%)' } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) { return context.raw + '%'; }
+                        }
+                    }
+                }
+            }
+        });
+    @endif
+
+    @if(isset($metadata['roc_curve']))
+        const rocCtx = document.getElementById('rocChart').getContext('2d');
+        const fpr = @json($metadata['roc_curve']['fpr'] ?? []);
+        const tpr = @json($metadata['roc_curve']['tpr'] ?? []);
+        const auc = {{ $metadata['roc_curve']['auc'] ?? 0 }};
+        
+        const rocPoints = fpr.map((val, i) => ({ x: val, y: tpr[i] }));
+        
+        new Chart(rocCtx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: `AUC = ${auc}`,
+                        data: rocPoints,
+                        borderColor: '#1f77b4',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0
+                    },
+                    {
+                        label: 'Random',
+                        data: [{x: 0, y: 0}, {x: 1, y: 1}],
+                        borderColor: '#ff7f0e',
+                        borderDash: [5, 5],
+                        borderWidth: 1.5,
+                        pointRadius: 0,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', min: 0, max: 1, title: { display: true, text: 'False Positive Rate' } },
+                    y: { type: 'linear', min: 0, max: 1.05, title: { display: true, text: 'True Positive Rate' } }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    @endif
+
+    @if(isset($trainingData) && $trainingData->count() > 0)
+        @php
+            $scatter_normal = [];
+            $scatter_preek = [];
+            foreach($trainingData as $d) {
+                $x = floatval($d->sistolik);
+                $y = floatval($d->diastolik);
+                if(strtolower($d->diagnosis) === 'preeklampsia') {
+                    $scatter_preek[] = ['x' => $x, 'y' => $y];
+                } else {
+                    $scatter_normal[] = ['x' => $x, 'y' => $y];
+                }
+            }
+        @endphp
+        const scatterCtx = document.getElementById('scatterChart').getContext('2d');
+        new Chart(scatterCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Normal',
+                        data: @json($scatter_normal),
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderColor: '#10b981',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Preeklampsia',
+                        data: @json($scatter_preek),
+                        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                        borderColor: '#ef4444',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Sistolik' } },
+                    y: { title: { display: true, text: 'Diastolik' } }
+                }
+            }
+        });
+    @endif
+});
+</script>
+@endif
+<!-- END CHART SECTION -->
+
 @endsection
 

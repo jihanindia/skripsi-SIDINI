@@ -15,6 +15,7 @@ class User extends Authenticatable
 
     public const ROLE_DINAS = 'dinas';
     public const ROLE_PUSKESMAS = 'puskesmas';
+    public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
         'name',
@@ -48,6 +49,11 @@ class User extends Authenticatable
         return $this->role === self::ROLE_PUSKESMAS;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
     public function getRoleLabelAttribute(): string
     {
         if ($this->isDinas()) {
@@ -56,6 +62,10 @@ class User extends Authenticatable
 
         if ($this->isPuskesmas() && $this->puskesmas) {
             return $this->puskesmas;
+        }
+
+        if ($this->isAdmin()) {
+            return 'Administrator';
         }
 
         return ucfirst($this->role ?? 'User');

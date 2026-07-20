@@ -363,10 +363,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const newTrendLabels = @json($trendLabels);
     const newTrendNormal = @json($trendNormal);
     const newTrendPreeklampsia = @json($trendPreeklampsia);
-    
-    newTrendLabels.reverse();
-    newTrendNormal.reverse();
-    newTrendPreeklampsia.reverse();
 
     new Chart(newTrendCtx, {
         type: 'line',

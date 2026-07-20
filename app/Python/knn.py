@@ -20,7 +20,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import (
     confusion_matrix,
     classification_report,
-    accuracy_score
+    accuracy_score,
+    roc_curve,
+    auc
 )
 
 from sklearn.pipeline import Pipeline
@@ -227,6 +229,26 @@ report = classification_report(
     output_dict=True
 )
 
+try:
+    y_prob = final_model.predict_proba(X_test)
+    classes = final_model.classes_
+    pos_idx = 1
+    if 'preeklampsia' in [str(c).lower() for c in classes]:
+        pos_idx = [str(c).lower() for c in classes].index('preeklampsia')
+    elif len(classes) > 1:
+        pos_idx = 1
+    
+    fpr, tpr, _ = roc_curve(y_test, y_prob[:, pos_idx], pos_label=classes[pos_idx])
+    roc_auc = auc(fpr, tpr)
+    roc_data = {
+        'fpr': fpr.tolist(),
+        'tpr': tpr.tolist(),
+        'auc': round(roc_auc, 3)
+    }
+except Exception as e:
+    roc_data = None
+
+
 # =========================
 # 13. HASIL ONE HOT ENCODING
 # =========================
@@ -273,6 +295,8 @@ output = {
     "classification_report": report,
 
     "k_results": results_k,
+
+    "roc_curve": roc_data,
 
     "encoded_columns": list(encoded_columns),
 

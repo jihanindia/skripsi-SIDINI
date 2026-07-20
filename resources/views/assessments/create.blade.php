@@ -52,7 +52,7 @@
         <div class="form-section">
             <h3 class="section-title">
                 <span class="section-icon">🤰</span>
-                Data Kehamilan
+                Data Pasien
             </h3>
             
             <div class="form-grid">
@@ -79,13 +79,13 @@
                 <div class="form-group">
                     <label class="form-label">Tekanan Darah Sistolik (mmHg)</label>
                     <input type="number" class="form-input" name="systolic_bp" min="70" max="250" placeholder="Contoh: 140" required>
-                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 90-120 mmHg</small>
+                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 90-140 mmHg</small>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Tekanan Darah Diastolik (mmHg)</label>
                     <input type="number" class="form-input" name="diastolic_bp" min="40" max="150" placeholder="Contoh: 90" required>
-                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 60-80 mmHg</small>
+                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 60-90 mmHg</small>
                 </div>
 
                 <div class="form-group">
@@ -106,7 +106,7 @@
                 <div class="form-group">
                     <label class="form-label">MAP (Mean Arterial Pressure)</label>
                     <input type="number" step="0.1" class="form-input" name="map" readonly>
-                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 70-100 mmHg</small>
+                    <small style="color: var(--color-gray-500); font-size: 0.85rem;">Normal: 70-90 mmHg</small>
                 </div>
             </div>
         </div>
@@ -126,7 +126,6 @@
                         <option value="1">+1</option>
                         <option value="2">+2</option>
                         <option value="3">+3</option>
-                        <option value="4">+4</option>
                     </select>
                 </div>
                 
@@ -238,11 +237,21 @@
         <div id="modalResultIcon" style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
         <h3 id="modalResultTitle" style="margin: 0 0 0.5rem; font-size: 1.5rem;"></h3>
         <p id="modalResultMessage" style="margin: 0 0 1rem; color: var(--color-gray-600); text-align: center; line-height: 1.6;"></p>
-        <p id="modalResultPatient" style="margin: 0 0 1.5rem; font-weight: 600; color: var(--color-gray-700);"></p>
+        <p id="modalResultPatient" style="margin: 0 0 1rem; font-weight: 600; color: var(--color-gray-700);"></p>
+        <!-- Rekomendasi Rujukan - hanya tampil saat preeklampsia -->
+        <div id="modalReferralBox" style="display:none; background:#fef2f2; border:1.5px solid #fca5a5; border-radius:12px; padding:1rem 1.25rem; margin-bottom:1.25rem; text-align:left;">
+            <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="font-size:1.3rem; flex-shrink:0;">🏥</span>
+                <div>
+                    <p style="font-weight:700; color:#b91c1c; margin:0 0 0.3rem; font-size:0.95rem;">Perlu Dirujuk ke Rumah Sakit</p>
+                    <p style="font-size:0.82rem; color:#7f1d1d; margin:0; line-height:1.55;">Pasien dengan risiko preeklampsia memerlukan penanganan lebih lanjut oleh dokter spesialis. <strong>Segera rujuk ke rumah sakit</strong> untuk pemeriksaan dan tatalaksana yang tepat.</p>
+                </div>
+            </div>
+        </div>
         <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
             <button type="button" class="btn btn-outline" id="btnModalClose">Tutup</button>
             <a href="{{ route('patients.index') }}" class="btn btn-primary" id="btnModalToPatients">Daftar Pasien</a>
-            <a href="#" class="btn btn-success" id="btnModalDetailAkurasi">Lihat Detail & Akurasi (Confusion Matrix)</a>
+            <a href="#" class="btn btn-success" id="btnModalDetailAkurasi">Lihat Detail</a>
         </div>
     </div>
 </div>
@@ -438,10 +447,25 @@ document.addEventListener("DOMContentLoaded", function () {
             ? 'Terdeteksi Preeklampsia'
             : 'Hasil Normal';
         document.getElementById('modalResultTitle').style.color = isPreeklampsia ? '#991b1b' : '#065f46';
-        document.getElementById('modalResultMessage').textContent = isPreeklampsia
+        let message = isPreeklampsia
             ? 'Berdasarkan analisis KNN, pasien berisiko mengalami preeklampsia. Segera lakukan evaluasi medis lebih lanjut.'
             : 'Berdasarkan analisis KNN, pasien dalam kondisi normal. Tetap lakukan pemantauan kehamilan secara rutin.';
+
+        if (!isPreeklampsia) {
+            const sistolik = parseInt(document.querySelector('[name="systolic_bp"]').value) || 0;
+            const diastolik = parseInt(document.querySelector('[name="diastolic_bp"]').value) || 0;
+            if (sistolik > 140 || diastolik > 90) {
+                message += ' Cek tekanan darah secara berkala.';
+            }
+        }
+        document.getElementById('modalResultMessage').textContent = message;
         document.getElementById('modalResultPatient').textContent = 'Pasien: ' + patientName;
+
+        // Tampilkan/sembunyikan rekomendasi rujukan
+        const referralBox = document.getElementById('modalReferralBox');
+        if (referralBox) {
+            referralBox.style.display = isPreeklampsia ? 'block' : 'none';
+        }
 
         const detailAkurasiBtn = document.getElementById('btnModalDetailAkurasi');
         if (detailAkurasiBtn) {

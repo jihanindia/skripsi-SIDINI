@@ -67,6 +67,14 @@ class AssessmentController extends Controller
             'assessment_date'  => $validated['assessment_date'],
         ]);
 
+        $recs = $prediction === 'preeklampsia'
+            ? ['Segera rujuk pasien ke rumah sakit', 'Monitor tekanan darah secara rutin']
+            : ['Lanjutkan pemeriksaan kehamilan rutin', 'Pantau tanda vital secara berkala'];
+
+        if ($prediction !== 'preeklampsia' && ((int)$validated['systolic_bp'] > 140 || (int)$validated['diastolic_bp'] > 90)) {
+            $recs[] = 'Cek tekanan darah secara berkala';
+        }
+
         $assessment->result()->create([
             'risk_category' => $prediction === 'preeklampsia' ? 'high_risk' : 'no_risk',
             'risk_score' => 100,
@@ -74,9 +82,7 @@ class AssessmentController extends Controller
             'severity_level' => $prediction === 'preeklampsia' ? 'moderate' : 'none',
             'supporting_indicators' => [],
             'knn_neighbors' => [],
-            'recommendations' => $prediction === 'preeklampsia'
-                ? ['Segera konsultasi dokter spesialis obstetri', 'Monitor tekanan darah secara rutin']
-                : ['Lanjutkan pemeriksaan kehamilan rutin', 'Pantau tanda vital secara berkala'],
+            'recommendations' => $recs,
             'urgency_level' => $prediction === 'preeklampsia' ? 'urgent' : 'routine',
         ]);
 
@@ -144,12 +150,18 @@ class AssessmentController extends Controller
 
         // Update result
         if ($assessment->result) {
+            $recs = $prediction === 'preeklampsia'
+                ? ['Segera rujuk pasien ke rumah sakit', 'Monitor tekanan darah secara rutin']
+                : ['Lanjutkan pemeriksaan kehamilan rutin', 'Pantau tanda vital secara berkala'];
+
+            if ($prediction !== 'preeklampsia' && ((int)$validated['systolic_bp'] > 140 || (int)$validated['diastolic_bp'] > 90)) {
+                $recs[] = 'Cek tekanan darah secara berkala';
+            }
+
             $assessment->result->update([
                 'risk_category'   => $prediction === 'preeklampsia' ? 'high_risk' : 'no_risk',
                 'severity_level'  => $prediction === 'preeklampsia' ? 'moderate' : 'none',
-                'recommendations' => $prediction === 'preeklampsia'
-                    ? ['Segera konsultasi dokter spesialis obstetri', 'Monitor tekanan darah secara rutin']
-                    : ['Lanjutkan pemeriksaan kehamilan rutin', 'Pantau tanda vital secara berkala'],
+                'recommendations' => $recs,
                 'urgency_level'   => $prediction === 'preeklampsia' ? 'urgent' : 'routine',
             ]);
         }

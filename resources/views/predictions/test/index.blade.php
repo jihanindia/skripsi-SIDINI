@@ -146,7 +146,7 @@
             <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            Model Tersedia &nbsp;|&nbsp; K={{ $metadata['best_k'] ?? '?' }} &nbsp;|&nbsp; Akurasi={{ $metadata['accuracy'] ?? '?' }}%
+            Model Tersedia &nbsp;|&nbsp; K={{ $metadata['best_k'] ?? '?' }} &nbsp;|&nbsp; Akurasi CV={{ $metadata['cv_accuracy'] ?? $metadata['accuracy'] ?? '?' }}%
         </div>
     @else
         <div class="no-model-badge">
@@ -184,13 +184,13 @@
             <p style="font-size:0.83rem; color:var(--color-gray-500); margin:0;">K-Nearest Neighbors · Euclidean Distance</p>
         </div>
     </div>
-    <div class="info-item">
+    <!-- <div class="info-item">
         <div class="info-item-icon" style="background:#fee2e2;">📋</div>
         <div>
             <p style="font-weight:700; margin:0 0 0.2rem; color:var(--color-gray-800);">Confusion Matrix</p>
             <p style="font-size:0.83rem; color:var(--color-gray-500); margin:0;">Otomatis tampil jika kolom <code>status</code> ada</p>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <!-- Required Columns Info -->
