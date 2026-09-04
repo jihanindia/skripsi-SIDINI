@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Penilaian Baru - SIDINI')
-@section('page-title', 'Penilaian Risiko Preeklampsia')
+@section('page-title', 'Deteksi Dini Preeklampsia')
 @section('page-subtitle', 'Form penilaian komprehensif berbasis algoritma K-Nearest Neighbors (KNN)')
 
 @section('content')
 <!-- Medical Disclaimer -->
-<div class="disclaimer fade-in">
+<!-- <div class="disclaimer fade-in">
     <div class="disclaimer-content">
         <h3 style="font-weight: 700; color: var(--color-gray-800); margin: 0 0 0.5rem 0;">⚠️ Disclaimer Medis</h3>
         <p style="margin: 0; color: var(--color-gray-700); line-height: 1.6;">
@@ -14,12 +14,12 @@
             Diagnosis dan penanganan medis hanya dapat dilakukan oleh tenaga kesehatan profesional yang berkompeten.
         </p>
     </div>
-</div>
+</div> -->
 
 <!-- Assessment Form Card -->
 <div class="medical-card fade-in" style="animation-delay: 0.1s;">
     <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--color-gray-800); margin: 0 0 0.5rem 0;">
-        📋 Form Penilaian Pasien
+        📋 Form Skrining Pasien
     </h2>
     <p style="color: var(--color-gray-600); margin: 0 0 2rem 0;">
         Lengkapi semua data pasien dengan teliti untuk mendapatkan hasil prediksi yang akurat

@@ -2,7 +2,7 @@
 
 @section('title', 'Laporan - SIDINI')
 @section('page-title', 'Laporan Deteksi Dini Preeklampsia')
-@section('page-subtitle', 'Data screening pasien — cetak dan ekspor Excel')
+@section('page-subtitle', 'Data Pasien Skrining Dini Preeklampsia - cetak dan ekspor Excel')
 
 @section('content')
 @php
@@ -76,7 +76,7 @@
 <div class="medical-card fade-in" id="reportPrintArea">
     <div class="report-header no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--color-gray-800); margin: 0;">
-            📊 Laporan Data Screening
+            📊 Data Pasien Skrining Dini Preeklampsia {{ $puskesmasList[$puskesmas] ?? $puskesmas }}
         </h2>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
             <a href="{{ route('reports.export', request()->query()) }}" class="btn btn-outline">
@@ -96,7 +96,7 @@
 
     <!-- Header cetak -->
     <div class="print-only print-header">
-        <h1 style="font-size: 1.25rem; margin: 0 0 0.25rem;">Laporan Screening Preeklampsia</h1>
+        <h1 style="font-size: 1.25rem; margin: 0 0 0.25rem;">Data Pasien Skrining Dini Preeklampsia {{ $puskesmasList[$puskesmas] ?? $puskesmas }}</h1>
         <p style="margin: 0; font-size: 0.875rem; color: #475569;">
             Dicetak: {{ now()->format('d/m/Y H:i') }} |
             Total: {{ $summary['total'] }} |

@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Data Pasien - SIDINI')
-@section('page-title', 'Data Pasien & Hasil Screening')
+@section('page-title', 'Riwayat Skrining Dini Preeklampsia')
 @section('page-subtitle')
 @if(auth()->user()->isPuskesmas())
-    Data screening — {{ auth()->user()->puskesmas }}
+    Data Skrining Dini Preeklampsia — {{ auth()->user()->puskesmas }}
 @else
-    Monitoring data screening seluruh puskesmas
+    Monitoring data skrining seluruh puskesmas
 @endif
 @endsection
 
@@ -36,7 +36,7 @@
 
 <div class="medical-card fade-in">
     <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--color-gray-800); margin: 0 0 1.5rem 0;">
-        📋 Data Hasil Screening
+        📋 Data Hasil Skrining
     </h3>
     <div style="overflow-x: auto;">
         <table class="medical-table" id="patientsTable">
